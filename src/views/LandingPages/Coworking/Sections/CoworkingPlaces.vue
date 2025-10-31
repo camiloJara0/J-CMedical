@@ -1,0 +1,116 @@
+<script setup>
+// example component
+import SimpleBlogCard from "../../../../examples/cards/blogCards/SimpleBlogCard.vue";
+import { computed } from 'vue'
+import { useAppStore } from "../../../../stores";
+const tarjetas = [
+  {
+    title: "Sensor SpO₂",
+    image: "https://biosumma.com/wp-content/uploads/2024/04/A0945-7.jpg",
+    images: [
+      "src/assets/img/products/so2.jpg"
+    ],
+    description: "Medición precisa de la saturación de oxígeno en sangre, con sensores cómodos y confiables."
+  },
+  {
+    title: "Sensor de Temperatura",
+    image: "https://sumador.com/cdn/shop/products/Stainless-steel-package-Waterproof-DS18b20-temperature-probe-temperature-sensor-18B20.jpg_640x640_1200x1200_8382681d-0253-476a-a257-d0f6173f0dae_2048x2048.jpg?v=1549379355",
+    images: [
+      "src/assets/img/products/temperatura.png"
+    ],
+    description: "Lecturas rápidas y precisas para el control térmico del paciente."
+  },
+  {
+    title: "Cable ECG / EKG",
+    image: "data:image/jpeg;base64,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AREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQEREBERAREQERED/9k=",
+    description: "Transmisión clara de señales eléctricas del corazón, con conectores seguros y materiales resistentes.",
+    images: [
+      "src/assets/img/products/ecg.jpg",
+      "src/assets/img/products/ekg.jpg",
+    ],
+  },
+  {
+    title: "Holter ECG",
+    image: "https://adiemed.es/img/p/5/2/4/524.jpg",
+    description: "Registro continuo de la actividad cardíaca para diagnósticos prolongados y detallados.",
+    images: [
+      "src/assets/img/products/ecg para holter.png"
+    ]
+  },
+  {
+    title: "Presión Arterial No Invasiva (NIBP)",
+    image: "data:image/jpeg;base64,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",
+    description: "Manguitos y tubos de alta calidad para una medición cómoda y exacta.",
+    images: [
+      "src/assets/img/products/nibp.jpg"
+    ]
+  },
+  {
+    title: "Cable de Presión Invasiva (IBP)",
+    image: "https://www.delcantomedical.cl/wp-content/uploads/1-6.jpg",
+    description: "Conectividad segura para monitoreo invasivo de presión arterial en entornos críticos.",
+    images: [
+      "src/assets/img/products/ibp.png"
+    ]
+  },
+  {
+    title: "Transductores",
+    image: "https://diplomadomedico.com/wp-content/uploads/2017/01/17-20.jpg",
+    description: "Lineales, convexos, endocavitarios compatibles con diferentes marcas.",
+    images: [
+      "src/assets/img/products/transductores.png"
+    ]
+  },
+  {
+    title: "Celdas de oxigeno",
+    image: "https://www.tecmedica.co/wp-content/uploads/2024/04/CELDAS-OXIGENO-1.jpg",
+    description: "Medición precisa de la saturación de oxígeno en sangre, con sensores cómodos y confiables.",
+    images: [
+      "src/assets/img/products/oxigeno.png"
+    ]
+  }
+];
+
+const tarjetasPorFila = computed(() => {
+  const filas = [];
+  for (let i = 0; i < tarjetas.length; i += 3) {
+    filas.push(tarjetas.slice(i, i + 3));
+  }
+  return filas;
+})
+
+const store = useAppStore()
+
+function abrirModal(title) {
+  store.showModal = true
+  const item = tarjetas.find((p) => p.title === title)
+  store.informacion = item
+  console.log(item)
+}
+
+</script>
+<template>
+  <section class="features-3 py-4">
+    <div class="container">
+      <div class="row text-center justify-content-center">
+        <div class="col-lg-6">
+          <h2>Explora nuestros productos</h2>
+          <p>
+            Contamos con una línea especializada de accesorios compatibles con equipos de monitoreo clínico,
+            seleccionados cuidadosamente para garantizar rendimiento, durabilidad y seguridad. Nuestros productos
+            incluyen:
+          </p>
+        </div>
+      </div>
+
+      <div class="row mt-5" v-for="(grupo, filaIndex) in tarjetasPorFila" :key="filaIndex">
+        <div class="col-lg-4 mb-lg-0 mb-4" v-for="(tarjeta, colIndex) in grupo" :key="colIndex">
+          <SimpleBlogCard :image="tarjeta.image" :title="tarjeta.title" :description="tarjeta.description"
+            :action="{ color: 'dark', action: abrirModal }" />
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+</template>

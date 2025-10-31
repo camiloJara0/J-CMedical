@@ -1,0 +1,42 @@
+:root {
+  --bs-primary: #2262a3;
+  --bs-claro: #3b7bbc;
+  --bs-oscuro: #264e78;
+  --bs-warning: #dd9d5c;
+  --bs-saturado: #1262b3;
+  --bs-desaturado: #2f6296;
+  --bs-web: #0000ff;
+  --bs-royalblue: #4169e1;
+}
+
+.bg-custom-default {
+  background-color: #2262a3;
+}
+.color-default {
+  color: #2262a3;
+}
+
+.bg-custom-claro {
+  background-color: #3b7bbc;
+}
+.color-default {
+  color: #3b7bbc;
+}
+
+.bg-custom-oscuro {
+  background-color: #264e78;
+}
+.color-oscuro {
+  background-color: #264e78;
+}
+
+.bg-custom-warning {
+  background-color: #dd9d5c;
+}
+.color-warning {
+  background-color: #dd9d5c;
+}
+
+html {
+  scroll-behavior: smooth;
+}
