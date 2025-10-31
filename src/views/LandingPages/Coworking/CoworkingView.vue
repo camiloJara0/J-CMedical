@@ -42,7 +42,7 @@ function cerrarModal() {
     </div>
   </div>
 
-  <Header image="https://cdn-blog.joinnus.com/blog/wp-content/uploads/2017/09/tecnologia-header.jpg" title="J&C Medical"
+  <Header image="public/JYC_BANNER.png" title="J&C Medical"
     :description="{
       text: 'Tecnología confiable para el cuidado de la vida.',
       class: 'pe-md-5 me-md-5 opacity-8',
@@ -53,7 +53,7 @@ function cerrarModal() {
     </div>
   </Header>
 
-  <div id="Inicio" class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n6 mb-4">
+  <div id="Inicio" class="card card-body blur shadow-blur mx-3 mx-md-4 mt-n3 mb-4">
     <Information />
     <Testimonials />
     <AboutUs id="SobreNosotros" />
