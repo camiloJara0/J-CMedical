@@ -116,6 +116,7 @@ function cerrarModal() {
   position: absolute;
   top: 0;
   z-index: 0;
+  overflow-x: hidden;
 }
 
 .fondo {

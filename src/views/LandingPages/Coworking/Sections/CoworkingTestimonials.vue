@@ -6,12 +6,12 @@
         <div class="col-10 mx-auto bg-gradient-dark border-radius-lg">
           <div class="row py-5">
             <div class="col-xl-4 col-md-6 px-5 position-relative">
-              <img class="img border-radius-md img-custom position-relative z-index-2 mt-n7"
-                src="src/assets/img/products/banner-medico-con-medico-usando-equipo.jpg"
-                loading="lazy" alt="Medico" />
+              <img class=" border-radius-md img-custom position-relative z-index-2 mt-n7"
+                src="src/assets/img/products/banner-medico-con-medico-usando-equipo.jpg" loading="lazy" alt="Medico" />
             </div>
+
             <div class="col-xl-4 col-md-5 z-index-2 position-relative px-md-3 px-5 my-md-auto mt-4">
-              <i class="material-icons text-white text-5xl">nuestros clientes</i>
+              <i class="material-icons text-white text-5xl">medical_services</i>
               <p class="text-lg text-white">
                 Desde que comenzamos a trabajar con esta empresa, hemos notado una mejora significativa en la precisión
                 y confiabilidad de nuestros equipos de monitoreo. Sus accesorios son duraderos, seguros y siempre llegan
@@ -23,6 +23,7 @@
               </p>
               <hr class="vertical start-100 ms-n5 d-xl-block d-none" />
             </div>
+
             <div class="col-1"></div>
             <div class="col-xl-2 col-12 px-xl-0 px-5 my-xl-auto">
               <h3 class="text-white mt-xl-0 mt-5">+ 100</h3>
@@ -42,24 +43,16 @@
 
 <style scoped>
 .img-custom {
-  height: 500px;
-  width: 300px;
+  width: 100%;
+  height: 120%;
   object-fit: cover;
 }
 
-@media (min-width: 768px) {
+@media screen and (max-width: 580px) {
   .img-custom {
-    height: 400px;
+    height: auto;
+    display: none;
   }
 }
-
-/* Escritorio (≥1024px) */
-@media (min-width: 1024px) {
-  .img-custom {
-    max-width: 400px;
-    height: 500px;
-  }
-}
-
 
 </style>

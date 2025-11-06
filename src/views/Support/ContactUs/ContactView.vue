@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 
 //example components
 import DefaultNavbar from "../../../examples/navbars/NavbarDefault.vue";
@@ -13,7 +13,6 @@ import image from "../../../../public/mano-en-guante-medico-apuntando-la-tecnolo
 import MaterialInput from "../../../components/MaterialInput.vue";
 import MaterialTextArea from "../../../components/MaterialTextArea.vue";
 import MaterialButton from "../../../components/MaterialButton.vue";
-import MaterialAlert from "../../../components/MaterialAlert.vue";
 
 // material-input
 import setMaterialInput from "@/assets/js/material-input";
@@ -27,13 +26,14 @@ const formData = ref({
   nombre: '',
   correo: '',
   nit: '',
+  file: '',
   mensaje: '',
 })
 
 async function enviarMensaje(event) {
   event.preventDefault();
 
-  const { nombre, correo, nit, mensaje } = formData.value;
+  const { nombre, correo, nit, mensaje, file } = formData.value;
 
   // Validaciones
   if (!nombre || !correo || !nit || !mensaje) {
@@ -56,25 +56,93 @@ async function enviarMensaje(event) {
     return;
   }
 
+  if (!(file instanceof File)) {
+    mostrarAlerta('El archivo no es valido.', 'warning');
+    return
+  }
+
+  // if (file.size > 50 * 1024) {
+  //   mostrarAlerta('La imagen supera los 50 KB. Por favor, selecciona una más liviana.', 'warning');
+  //   return
+  // }
+
+  // Convertir imagen a base64
+  formData.value.file = await compressAndConvertToBase64(file)
+
+  formData.value.file = 'data:image/jpeg;base64,' + formData.value.file
+
+  const base64String = formData.value.file
+  const sizeBytes = new TextEncoder().encode(base64String).length
+  const sizeKB = sizeBytes / 1024
+
+  if (sizeKB > 50) {
+    mostrarAlerta(`La cadena base64 pesa ${sizeKB.toFixed(2)} KB, que supera el límite de 50 KB.`, 'warning');
+    return
+  }
+
   // Si todo está bien, enviar el mensaje
   try {
+
     await emailjs.send(
       import.meta.env.VITE_SERVICE_ID,
       import.meta.env.VITE_TEMPLATE_ID,
       formData.value,
       import.meta.env.VITE_PUBLIC_KEY
     );
+
     mostrarAlerta('Mensaje enviado correctamente ✅', 'success');
+
     formData.value = {
       nombre: '',
       correo: '',
       nit: '',
+      file: '',
       mensaje: '',
     }
   } catch (error) {
     console.error('Error al enviar:', error);
     mostrarAlerta('Hubo un problema al enviar el mensaje ❌', 'danger');
   }
+}
+
+// Funcion para comprimir imagen y convertirla en base64
+async function compressAndConvertToBase64(file, maxWidth = 800, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = (event) => {
+      const img = new Image()
+      img.onload = () => {
+        // Redimensionar si es necesario
+        let width = img.width
+        let height = img.height
+
+        if (width > maxWidth) {
+          height *= maxWidth / width
+          width = maxWidth
+        }
+
+        // Crear canvas y dibujar imagen
+        const canvas = document.createElement('canvas')
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, width, height)
+
+
+        // Comprimir y convertir a base64
+        const compressedDataUrl = canvas.toDataURL('image/png', quality)
+        const base64 = compressedDataUrl.split(',')[1] // quitar encabezado
+        resolve(base64)
+      }
+
+      img.onerror = reject
+      img.src = event.target.result
+    }
+
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
 }
 
 // Función para mostrar alertas
@@ -94,23 +162,8 @@ function validarCorreo(correo) {
   return regex.test(correo);
 }
 
-
 </script>
 <template>
-  <!-- <div class="container position-sticky z-index-sticky top-0">
-    <div class="row">
-      <div class="col-12">
-        <DefaultNavbar
-          :sticky="true"
-          :action="{
-            route: 'https://www.creative-tim.com/product/vue-material-kit-pro',
-            color: 'bg-gradient-primary',
-            label: 'Buy Now',
-          }"
-        />
-      </div>
-    </div>
-  </div> -->
 
   <section>
     <div class="page-header max-vh-80">
@@ -153,6 +206,10 @@ function validarCorreo(correo) {
                       <div class="col-12">
                         <MaterialInput class="input-group-static mb-4" type="text" label="NIT" placeholder="Digita NIT"
                           v-model="formData.nit" :modelValue="formData.nit" />
+                      </div>
+                      <div class="col-8">
+                        <MaterialInput class="input-group-static mb-4" type="file" label="Adjuntar imagenes de referencia (50KB)"
+                          @change="e => formData.file = e.target.files[0]" />
                       </div>
                     </div>
                     <div class="form-group mb-0 mt-md-0 mt-4">

@@ -78,7 +78,7 @@ defineProps({
   <div class="abajo">
     <div>
       <a href="#Inicio">
-        <img :src="downArrow" alt="Abajo" width="20">
+        <img :src="downArrow" alt="Abajo" width="25">
       </a>
     </div>
   </div>
@@ -239,6 +239,7 @@ defineProps({
 
   .buttons-custom {
     gap: 2px;
+    flex-direction: column;
   }
 
   .buttons-custom a {
