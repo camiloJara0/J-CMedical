@@ -1,4 +1,6 @@
 <script setup>
+import { useAppStore } from '../../../stores';
+
 defineProps({
   image: {
     type: String,
@@ -20,7 +22,13 @@ defineProps({
       color: "bg-custom-default",
     }),
   },
+  producto: {
+    type: Object,
+    required: true,
+  }
 });
+
+const store = useAppStore()
 </script>
 <template>
   <!-- Start Card Raised Header -->
@@ -40,14 +48,24 @@ defineProps({
       <p>
         {{ description }}
       </p>
-      <button
-        class="btn btn-sm mb-0"
-        :class="`btn-outline-${action.color} bg-custom-default`"
-        name="button"
-        @click="action.action(title)"
-      >
-        Mas Informacion
-      </button>
+      <div class="d-flex gap-2">
+        <button
+          class="btn btn-sm mb-0"
+          :class="`btn-outline-${action.color} bg-custom-default`"
+          name="button"
+          @click="action.action(title)"
+        >
+          Mas Información
+        </button>
+        <button
+          class="btn btn-sm mb-0 d-flex justify-content-center align-items-center gap-2"
+          :class="`btn-outline-success bg-custom-default`"
+          name="button"
+          @click="store.agregarProducto(producto)"
+        >
+          Añadir <i class="material-icons color-success fs-5">shopping_cart</i>
+        </button>
+      </div>
     </div>
   </div>
   <!-- End Card Raised Header -->

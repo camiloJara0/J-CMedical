@@ -9,6 +9,14 @@
   --bs-royalblue: #4169e1;
 }
 
+.bg-primary {
+  background-color: #2262a3 !important;
+}
+
+.bg-gradient-primary {
+  background-color: #2262a3 !important;
+}
+
 .bg-custom-default {
   background-color: #2262a3;
 }

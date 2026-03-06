@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import CoworkingView from "../views/LandingPages/Coworking/CoworkingView.vue";
+import view from "../views/LandingPages/Cliente/View.vue"
+import login from "../views/Authentication/SignIn/login.vue";
+import ViewAdmin from "../views/LandingPages/Admin/ViewAdmin.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,12 +13,15 @@ const router = createRouter({
     {
       path: "/",
       name: "presentation",
-      component: CoworkingView,
+      component: view,
     },
     {
-      path: "/pages/landing-pages/coworking",
-      name: "coworking",
-      component: CoworkingView,
+      path: "/inicio_sesion",
+      component: login,
+    },
+    {
+      path: "/Admin",
+      component: ViewAdmin,
     },
   ],
 });
