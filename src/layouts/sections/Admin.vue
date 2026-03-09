@@ -1,58 +1,54 @@
 <script setup>
+import { onMounted, onUnmounted } from "vue";
+
+//example components
+import NavbarDefault from "@/views/LandingPages/Admin/Components/NavbarDefault.vue";
+import DefaultFooter from "@/views/LandingPages/Admin/Components/FooterDefault.vue";
+import MaterialAlert from "@/views/LandingPages/Cliente/Components/MaterialAlert.vue";
+
+//sections
+import { useAppStore } from "@/stores";
+
+//hooks
+const body = document.getElementsByTagName("body")[0];
+
+onMounted(() => {
+  body.classList.add("coworking");
+  body.classList.add("bg-gray-200");
+});
+
+onUnmounted(() => {
+  body.classList.remove("coworking");
+  body.classList.remove("bg-gray-200");
+});
+
+const store = useAppStore()
+function cerrarModal() {
+  store.showModal = false
+}
 </script>
 <template>
-  <!-- Contenido principal -->
-  <div class="container mt-2">
-    <div class="row text-center mb-4">
-      <h2>Bienvenido, Administrador</h2>
-      <p>Selecciona la sección a la que deseas acceder</p>
-    </div>
+  <div class="container-custom"></div>
 
-    <div class="row g-4">
-      <!-- Productos -->
-      <div class="col-md-3">
-        <div class="card shadow">
-          <div class="card-header">Productos</div>
-          <div class="card-body">
-            <p>Gestiona el inventario y los detalles de tus productos.</p>
-            <a href="#Productos" class="btn btn-custom w-100">Acceder</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Categorías -->
-      <div class="col-md-3">
-        <div class="card shadow">
-          <div class="card-header">Categorías</div>
-          <div class="card-body">
-            <p>Organiza tus productos en categorías personalizadas.</p>
-            <a href="#Categorias" class="btn btn-custom w-100">Acceder</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Cotizaciones -->
-      <div class="col-md-3">
-        <div class="card shadow">
-          <div class="card-header">Cotizaciones</div>
-          <div class="card-body">
-            <p>Administra las solicitudes y genera cotizaciones fácilmente.</p>
-            <a href="#Cotizaciones" class="btn btn-custom w-100">Acceder</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Usuarios -->
-      <div class="col-md-3">
-        <div class="card shadow">
-          <div class="card-header">Usuarios</div>
-          <div class="card-body">
-            <p>Controla el acceso y gestiona la información de los usuarios.</p>
-            <a href="#Usuarios" class="btn btn-custom w-100">Acceder</a>
-          </div>
-        </div>
+  <div class="container position-sticky z-index-sticky top-0">
+    <div class="row">
+      <div class="col-12">
+        <NavbarDefault darkText :sticky="true" />
       </div>
     </div>
+  </div>
+
+  <main id="Inicio" class="card card-body blur shadow-blur mx-3 mx-md-4 mt-6 mb-4 py-sm-6 py-2" >
+    <router-view />
+  </main>
+
+  <DefaultFooter />
+
+  <!-- Alerta -->
+  <div class="fondoAlert" v-if="store.showAlert">
+    <MaterialAlert :dismissible="true" :color="store.alert.color" fontWeight="bold" class="m-3 mr-5">
+      <p class="font-weight-bold m-0">{{ store.alert.texto }}</p>
+    </MaterialAlert>
   </div>
 
 </template>

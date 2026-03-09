@@ -41,9 +41,7 @@ async function enviarFormulario(event) {
     const respuesta = await iniciarSesion(formData.value)
 
     store.mostrarAlerta('Mensaje enviado correctamente', 'success');
-
     store.cargando = false
-    window.location.href = '/'
 
   } catch (error) {
     console.error('Error al enviar:', error);
@@ -54,40 +52,39 @@ async function enviarFormulario(event) {
 }
 </script>
 <template>
-  <!-- <DefaultNavbar
-    transparent
-    :action="{
-      color: 'btn-white',
-      route: 'https://www.creative-tim.com/product/vue-material-kit-pro',
-      label: 'Buy Now',
+<div class="p-0 m-0" style="background: linear-gradient(135deg, #f5efe9, #d4dfff); height: 100dvh;">
+  <!-- Encabezado con imagen -->
+  <div
+    class="page-header align-items-start min-height-300 mx-3 border-radius-xl"
+    :style="{
+      backgroundImage:
+        'url(public/headerLogin.jpg)',
     }"
-  /> -->
-  <div class="p-0 m-0" style="background: #f3f3f3; height: 100dvh;">
-    <div
-      class="page-header align-items-start min-height-300 m-3 border-radius-xl"
-      :style="{
-        backgroundImage:
-          'url(https://images.unsplash.com/photo-1491466424936-e304919aada7?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1949&q=80)',
-      }"
-      loading="lazy"
-    >
-      <span class="mask bg-gradient-dark opacity-6"></span>
-    </div>
+    loading="lazy"
+  >
+    <!-- <span class="mask" style="background: rgba(34,98,163,0.7);"></span> -->
+  </div>
+
+  <!-- Contenedor principal -->
   <div class="container mb-4">
     <div class="row mt-lg-n12 mt-md-n12 mt-n12 justify-content-center">
       <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
-        <div class="card mt-8">
+        <div class="card shadow-lg border-0 mt-8">
+          <!-- Header -->
           <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
             <div
-              class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1 text-center py-4"
+              class="shadow border-radius-lg py-4 text-center"
+              style="background: linear-gradient(90deg, #2262a3, #4169e1);"
             >
-              <h4 class="font-weight-bolder text-white mt-1">Iniciar Sesión</h4>
-              <p class="mb-1 text-sm text-white">
-                Escribe tu correo y contraseña para ingresar
+              <h4 class="fw-bold text-white mb-1">Iniciar Sesión</h4>
+              <p class="text-white-50 mb-0">
+                Ingresa tu correo y contraseña
               </p>
             </div>
           </div>
-          <div class="card-body">
+
+          <!-- Body -->
+          <div class="card-body px-4">
             <form role="form" class="text-start">
               <MaterialInput
                 id="email"
@@ -95,7 +92,8 @@ async function enviarFormulario(event) {
                 label="Correo"
                 type="email"
                 placeholder="john@email.com"
-                v-model="formData.correo" :modelValue="formData.correo"
+                v-model="formData.correo"
+                :modelValue="formData.correo"
               />
               <MaterialInput
                 id="password"
@@ -103,36 +101,50 @@ async function enviarFormulario(event) {
                 label="Contraseña"
                 type="password"
                 placeholder="•••••••••••••"
-                v-model="formData.contraseña" :modelValue="formData.contraseña"
+                v-model="formData.contraseña"
+                :modelValue="formData.contraseña"
               />
+
               <MaterialSwitch
                 class="d-flex align-items-center mb-3"
                 id="rememberMe"
                 labelClass="mb-0 ms-3"
                 checked
-                >Recordarme</MaterialSwitch
               >
+                Recordarme
+              </MaterialSwitch>
+
               <div class="text-center">
                 <MaterialButton
-                  class="mt-3 mb-0"
+                  class="mt-3 mb-0 px-6"
                   variant="gradient"
-                  color="dark"
                   fullWidth
                   @click="enviarFormulario"
-                  >Iniciar</MaterialButton
+                  style="background: linear-gradient(90deg, #2262a3, #4169e1); color: '#fff';"
                 >
+                  Iniciar
+                </MaterialButton>
               </div>
             </form>
           </div>
+
+          <!-- Footer -->
           <div class="card-footer text-center pt-0 px-lg-2 px-1">
             <p class="mb-4 text-sm mx-auto">
-              No tienes cuenta?
-              <a class="font-bold">Registrarme</a>
+              ¿No tienes cuenta?
+              <a class="fw-bold" style="color:#2262a3;">Registrarme</a>
             </p>
           </div>
         </div>
       </div>
     </div>
   </div>
-  </div>
+</div>
+
 </template>
+
+<style scoped>
+body {
+  background-color: black;
+}
+</style>

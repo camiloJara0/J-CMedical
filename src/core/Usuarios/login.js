@@ -22,8 +22,8 @@ export async function iniciarSesion(form) {
     localStorage.setItem('token', data.access_token)
     localStorage.setItem('rol', data.user.rol)
     localStorage.setItem('user', data.user.correo)
-
-    if(data.user.rol == 'Admin'){
+console.log(data.user.rol)
+    if(data.user.rol === 'Admin'){
         window.location.href = '/Admin'
     } else {
         window.location.href = '/'

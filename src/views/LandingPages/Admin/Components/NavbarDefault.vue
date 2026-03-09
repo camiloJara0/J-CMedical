@@ -114,7 +114,7 @@ function showNav () {
           : 'font-weight-bolder text-lg ms-sm-3'
       ]" :to="{ name: 'presentation' }" rel="tooltip" title="Nombre Compañia" data-placement="bottom">
         <img src="src/assets/img/products/jyc_logo.png" width="20" alt="Logo J&C Medical"/>
-        <span class="color-default">J&C MEDICAL</span>
+        <span class="color-default">Panel de Administracion</span>
       </RouterLink>
 
       <button class="navbar-toggler shadow-none ms-2 bg-white" type="button" data-bs-toggle="collapse" @click="showNav"
@@ -129,13 +129,19 @@ function showNav () {
       <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
         <ul class="navbar-nav navbar-nav-hover ms-auto">
           <li class="nav-item dropdown dropdown-hover mx-2">
-            <a href="#SobreNosotros" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
+            <a href="/Admin/Cotizaciones" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">contacts</i>
               Solicitudes Cotizacion
             </a>
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">
-            <a href="#Productos" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
+            <a href="/Admin/Categorias" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
+              <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">view_day</i>
+              Categorias
+            </a>
+          </li>
+          <li class="nav-item dropdown dropdown-hover mx-2">
+            <a href="/Admin/Productos" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">view_day</i>
               Productos
             </a>
