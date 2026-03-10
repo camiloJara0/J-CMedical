@@ -142,7 +142,7 @@ function validarCorreo(correo) {
             <div class="card d-flex blur justify-content-center shadow-lg my-sm-0 my-sm-6 mt-md-8 mt-4 mb-5">
               <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
                 <div class="bg-custom-default shadow-dark border-radius-lg p-3">
-                  <h3 class="text-white mb-0">Solicitar Cotizacion</h3>
+                  <h3 class="text-white mb-0">Solicitar Cotización</h3>
                 </div>
               </div>
               <div class="card-body">
@@ -164,16 +164,16 @@ function validarCorreo(correo) {
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <MaterialInput class="input-group-static mb-4" type="text" label="NIT" placeholder="Digita NIT"
+                        <MaterialInput class="input-group-static mb-4" type="text" label="NIT o Cedula" placeholder="Digita NIT"
                           v-model="formData.nit" :modelValue="formData.nit" />
                       </div>
                       <div class="col-md-6">
                         <MaterialInput class="input-group-static mb-4" type="text" label="Telefono" placeholder="Número de Celular"
                           v-model="formData.telefono" :modelValue="formData.telefono" />
                       </div>
-                      <div class="col-8">
+                      <div class="col-12">
                         <MaterialInput class="input-group-static mb-4" type="file"
-                          label="Adjuntar imagenes de conector (50KB)"
+                          label="Adjuntar imagenes de conector (<50Mb)" inputClass="px-3"
                           @change="e => formData.file = e.target.files[0]" />
                       </div>
                     </div>

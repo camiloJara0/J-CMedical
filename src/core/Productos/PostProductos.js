@@ -15,12 +15,16 @@ export async function enviarProductos(isEditing, producto) {
         formData.append("stock", producto.stock);
         formData.append("categoria_id", producto.categoria_id);
 
-        console.log(producto.imagen)
         // Si hay imagen seleccionada
         if (producto.imagen) {
             const blob = producto.imagen
             const fileImagen = new File([blob], "imagen.jpg", { type: blob.type });
             formData.append("imagen", fileImagen);
+        }
+
+        if (isEditing) {
+            formData.append("_method", "PUT");
+            formData.append("id", producto.id);
         }
 
         const response = await fetch(url, {

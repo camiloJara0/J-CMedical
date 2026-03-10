@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { useAppStore } from '../../../../stores'
 import { traerCategorias } from '../../../../core/Categorias/GetCategorias'
 import { enviarCategorias } from '../../../../core/Categorias/PostCategorias'
+import { eliminarCategoria } from '../../../../core/Categorias/DeleteCategoria'
 
 const categorias = ref([])
 const showFormModal = ref(false)
@@ -35,8 +36,7 @@ async function loadData() {
         loading.value = true
         categorias.value = await traerCategorias()
     } catch (error) {
-        store.alert = { color: 'danger', texto: 'Error al cargar categorías' }
-        store.showAlert = true
+        store.mostrarAlerta('Error al cargar categorias', 'danger')
     } finally {
         loading.value = false
     }
@@ -78,11 +78,9 @@ async function saveCategoria() {
 
         await loadData()
         showFormModal.value = false
-        store.alert = { color: 'success', texto: isEditing.value ? 'Categoría actualizada' : 'Categoría creada' }
-        store.showAlert = true
+        store.mostrarAlerta(isEditing.value ? 'Categoría actualizada' : 'Categoría creada', 'success')
     } catch (error) {
-        store.alert = { color: 'danger', texto: 'Error al guardar categoría' }
-        store.showAlert = true
+        store.mostrarAlerta('Error al guardar categoría', 'danger')
     } finally {
         loading.value = false
     }
@@ -91,24 +89,14 @@ async function saveCategoria() {
 async function deleteCategoria() {
     try {
         loading.value = true
-        const response = await fetch(`http://127.0.0.1:8000/api/categorias/${selectedCategoria.value.id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        })
 
-        if (!response.ok) throw new Error('Error al eliminar')
+        const response = await eliminarCategoria(selectedCategoria.value)
 
         await loadData()
         showDeleteModal.value = false
-        store.alert = { color: 'success', texto: 'Categoría eliminada' }
-        store.showAlert = true
+        store.mostrarAlerta('Categoría eliminada', 'success')
     } catch (error) {
-        store.alert = { color: 'danger', texto: 'Error al eliminar categoría' }
-        store.showAlert = true
+        store.mostrarAlerta('Error al eliminar categoría', 'danger')
     } finally {
         loading.value = false
     }
@@ -124,7 +112,7 @@ async function deleteCategoria() {
                 </div>
                 <div class="col-lg-6 text-end">
                     <button @click="openCreateForm" class="btn btn-dark btn-sm">
-                        <i class="material-icons me-2">add</i> Nueva Categoría
+                        <i class="material-icons me-2 fs-5">add</i> Nueva Categoría
                     </button>
                 </div>
             </div>
@@ -132,7 +120,7 @@ async function deleteCategoria() {
             <!-- Búsqueda -->
             <div class="row mb-4">
                 <div class="col-lg-6">
-                    <input v-model="searchTerm" type="search" class="form-control" placeholder="Buscar categoría..." />
+                    <input v-model="searchTerm" type="search" class="form-control border px-2" placeholder="Buscar categoría..." />
                 </div>
             </div>
 
@@ -153,11 +141,11 @@ async function deleteCategoria() {
                             <td>
                                 <button @click="openEditForm(categoria)" class="btn btn-sm btn-warning me-2"
                                     title="Editar">
-                                    <i class="material-icons">edit</i>
+                                    <i class="material-icons fs-6">edit</i>
                                 </button>
                                 <button @click="openDeleteModal(categoria)" class="btn btn-sm btn-danger"
                                     title="Eliminar">
-                                    <i class="material-icons">delete</i>
+                                    <i class="material-icons fs-6">delete</i>
                                 </button>
                             </td>
                         </tr>
@@ -290,7 +278,7 @@ async function deleteCategoria() {
 
 .table-responsive {
     border-radius: 8px;
-    overflow: hidden;
+    overflow-y: hidden;
 }
 
 .table {

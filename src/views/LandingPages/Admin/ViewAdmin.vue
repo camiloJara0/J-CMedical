@@ -15,7 +15,7 @@
           <div class="card-header">Productos</div>
           <div class="card-body">
             <p>Gestiona el inventario y los detalles de tus productos.</p>
-            <a href="#Productos" class="btn btn-custom w-100">Acceder</a>
+            <a href="/Admin/Productos" class="btn btn-custom w-100">Acceder</a>
           </div>
         </div>
       </div>
@@ -26,7 +26,7 @@
           <div class="card-header">Categorías</div>
           <div class="card-body">
             <p>Organiza tus productos en categorías personalizadas.</p>
-            <a href="#Categorias" class="btn btn-custom w-100">Acceder</a>
+            <a href="/Admin/Categorias" class="btn btn-custom w-100">Acceder</a>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
           <div class="card-header">Cotizaciones</div>
           <div class="card-body">
             <p>Administra las solicitudes y genera cotizaciones fácilmente.</p>
-            <a href="#Cotizaciones" class="btn btn-custom w-100">Acceder</a>
+            <a href="/Admin/Cotizaciones" class="btn btn-custom w-100">Acceder</a>
           </div>
         </div>
       </div>

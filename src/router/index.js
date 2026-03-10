@@ -29,7 +29,7 @@ const router = createRouter({
       component: AdminLayout,   // Layout padre
       children: [
         {
-          path: "/",     // /Admin/
+          path: "",     // /Admin/
           name: "Inicio",
           component: ViewAdmin,
         },

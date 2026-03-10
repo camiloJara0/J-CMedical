@@ -4,6 +4,7 @@ import { useAppStore } from '../../../../stores'
 import { traerProductos } from '../../../../core/Productos/GetProductos'
 import { traerCategorias } from '../../../../core/Categorias/GetCategorias'
 import { enviarProductos, reducirImagen } from '../../../../core/Productos/PostProductos'
+import { eliminarProductos } from '../../../../core/Productos/DeleteProductos'
 
 const productos = ref([])
 const categorias = ref([])
@@ -43,8 +44,7 @@ async function loadData() {
     productos.value = await traerProductos()
     categorias.value = await traerCategorias()
   } catch (error) {
-    store.alert = { color: 'danger', texto: 'Error al cargar productos' }
-    store.showAlert = true
+    store.mostrarAlerta('Error al cargar productos', 'danger')
   } finally {
     loading.value = false
   }
@@ -77,8 +77,7 @@ function openDeleteModal(producto) {
 
 async function saveProducto() {
   if (!formData.value.nombre || !formData.value.categoria_id) {
-    store.alert = { color: 'warning', texto: 'Por favor completa los campos obligatorios' }
-    store.showAlert = true
+    store.mostrarAlerta('Por favor completa los campos obligatorios', 'warning')
     return
   }
 
@@ -88,11 +87,9 @@ async function saveProducto() {
 
     await loadData()
     showFormModal.value = false
-    store.alert = { color: 'success', texto: isEditing.value ? 'Producto actualizado' : 'Producto creado' }
-    store.showAlert = true
+    store.mostrarAlerta(isEditing.value ? 'Producto actualizado' : 'Producto creado', 'success')
   } catch (error) {
-    store.alert = { color: 'danger', texto: 'Error al guardar producto' }
-    store.showAlert = true
+    store.mostrarAlerta('Error al guardar producto', 'danger')
   } finally {
     loading.value = false
   }
@@ -101,23 +98,13 @@ async function saveProducto() {
 async function deleteProducto() {
   try {
     loading.value = true
-    const response = await fetch(`http://127.0.0.1:8000/api/productos/${selectedProducto.value.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    })
-
-    if (!response.ok) throw new Error('Error al eliminar')
+    const response = await eliminarProductos(selectedProducto.value)
 
     await loadData()
     showDeleteModal.value = false
-    store.alert = { color: 'success', texto: 'Producto eliminado' }
-    store.showAlert = true
+    store.mostrarAlerta('Producto eliminado', 'success')
   } catch (error) {
-    store.alert = { color: 'danger', texto: 'Error al eliminar producto' }
-    store.showAlert = true
+    store.mostrarAlerta('Error al eliminar producto', 'danger')
   } finally {
     loading.value = false
   }
@@ -154,7 +141,7 @@ async function onFileChange(event) {
       <!-- Búsqueda -->
       <div class="row mb-4">
         <div class="col-lg-6">
-          <input v-model="searchTerm" type="search" class="form-control" placeholder="Buscar producto..." />
+          <input v-model="searchTerm" type="search" class="form-control border px-2" placeholder="Buscar producto..." />
         </div>
       </div>
 
@@ -233,9 +220,12 @@ async function onFileChange(event) {
           </div>
 
           <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-6 input-grop mb-3">
               <label class="form-label fw-bold">URL Imagen</label>
-              <input @change="onFileChange" type="file" class="form-control" placeholder="Selecciona una imagen" />
+              <div class="input-group">
+                <input @change="onFileChange" type="file" class="form-control" placeholder="Selecciona una imagen" id="inputGroupFile" />
+                <label class="input-group-text" for="inputGroupFile">Cargar</label>
+              </div>
             </div>
 
             <div class="col-md-6 mb-3">
@@ -344,7 +334,7 @@ async function onFileChange(event) {
 
 .table-responsive {
   border-radius: 8px;
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 .table {

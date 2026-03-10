@@ -23,7 +23,7 @@ export async function enviarCotizacion(cotizacion) {
       }
     });
 
-    const response = await fetch(`http://127.0.0.1:8000/api/solicitud_cotizacion`, {
+    const response = await fetch(`http://127.0.0.1:8000/api/solicitar_cotizacion`, {
       method: 'POST',
       body: formData,
       headers: {

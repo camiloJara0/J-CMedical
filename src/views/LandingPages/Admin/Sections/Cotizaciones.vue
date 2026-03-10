@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useAppStore } from '../../../../stores'
+import { traerCotizaciones } from '../../../../core/Cotizaciones/GetCotizaciones'
+import { actualizarCotizaciones } from '../../../../core/Cotizaciones/PutCotizaciones'
+import { eliminarCotizacion } from '../../../../core/Cotizaciones/DeleteCotizaciones'
 
 const cotizaciones = ref([])
 const showFormModal = ref(false)
@@ -8,16 +11,19 @@ const showDeleteModal = ref(false)
 const isEditing = ref(false)
 const loading = ref(false)
 const store = useAppStore()
+// const route = useRoute();
 
 const formData = ref({
     id: null,
     estado: '',
     respuesta: '',
-    monto: ''
+    monto: '',
+    productos: [],
 })
 
 const selectedCotizacion = ref(null)
 const statusFilter = ref('todas')
+const filtroId = ref('')
 
 const cotizacionesFiltradas = computed(() => {
     if (statusFilter.value === 'todas') {
@@ -27,26 +33,22 @@ const cotizacionesFiltradas = computed(() => {
 })
 
 onMounted(async () => {
+    const user = localStorage.getItem('rol')
+    if(!user || user !== 'Admin' ){
+        store.mostrarAlerta('Ingresa como administrador para tener acceso.', 'warning')
+        window.location.href = '/inicio_sesion'
+    }
+
+    // filtroId.value = route.params.id
     await loadData()
 })
 
 async function loadData() {
     try {
         loading.value = true
-        const response = await fetch('http://127.0.0.1:8000/api/solicitud_cotizacion', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        })
-
-        if (!response.ok) throw new Error('Error al cargar')
-
-        cotizaciones.value = await response.json()
+        cotizaciones.value = await traerCotizaciones()
     } catch (error) {
-        store.alert = { color: 'danger', texto: 'Error al cargar cotizaciones' }
-        store.showAlert = true
+        store.mostrarAlerta('Error al cargar cotizaciones', 'danger')
     } finally {
         loading.value = false
     }
@@ -59,7 +61,10 @@ function openRespondForm(cotizacion) {
         id: cotizacion.id,
         estado: cotizacion.estado || 'pendiente',
         respuesta: cotizacion.respuesta || '',
-        monto: cotizacion.monto || ''
+        monto: cotizacion.monto || '',
+        correo: cotizacion.correo || '',
+        nombre: cotizacion.nombre || '',
+        productos: cotizacion.detalles || []
     }
     showFormModal.value = true
 }
@@ -71,31 +76,19 @@ function openDeleteModal(cotizacion) {
 
 async function saveCotizacion() {
     if (!formData.value.respuesta) {
-        store.alert = { color: 'warning', texto: 'Por favor ingresa una respuesta' }
-        store.showAlert = true
+        store.mostrarAlerta('Por favor ingresa una respuesta', 'warning')
         return
     }
 
     try {
         loading.value = true
-        const response = await fetch(`http://127.0.0.1:8000/api/cotizaciones/${formData.value.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            },
-            body: JSON.stringify(formData.value)
-        })
-
-        if (!response.ok) throw new Error('Error al guardar')
+        const response = await actualizarCotizaciones(formData.value)
 
         await loadData()
         showFormModal.value = false
-        store.alert = { color: 'success', texto: 'Cotización actualizada' }
-        store.showAlert = true
+        store.mostrarAlerta('Cotización actualizada', 'success')
     } catch (error) {
-        store.alert = { color: 'danger', texto: 'Error al guardar cotización' }
-        store.showAlert = true
+        store.mostrarAlerta('Error al guardar cotización', 'danger')
     } finally {
         loading.value = false
     }
@@ -104,23 +97,13 @@ async function saveCotizacion() {
 async function deleteCotizacion() {
     try {
         loading.value = true
-        const response = await fetch(`http://127.0.0.1:8000/api/cotizaciones/${selectedCotizacion.value.id}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
-            }
-        })
-
-        if (!response.ok) throw new Error('Error al eliminar')
+        const response = await eliminarCotizacion(selectedCotizacion.value)
 
         await loadData()
         showDeleteModal.value = false
-        store.alert = { color: 'success', texto: 'Cotización eliminada' }
-        store.showAlert = true
+        store.mostrarAlerta('Cotización eliminada', 'success')
     } catch (error) {
-        store.alert = { color: 'danger', texto: 'Error al eliminar cotización' }
-        store.showAlert = true
+        store.mostrarAlerta('Error al eliminar cotización', 'danger')
     } finally {
         loading.value = false
     }
@@ -173,9 +156,11 @@ function getStatusBadge(estado) {
                     </thead>
                     <tbody>
                         <tr v-for="cotizacion in cotizacionesFiltradas" :key="cotizacion.id">
-                            <td class="fw-bold">{{ cotizacion.usuario_nombre || 'Usuario' }}</td>
+                            <td class="fw-bold">{{ cotizacion.nombre || 'Usuario' }}</td>
                             <td>{{ cotizacion.telefono || 'N/A' }}</td>
-                            <td>{{ cotizacion.producto_nombre || 'N/A' }}</td>
+                            <td>
+                                <p v-for="detalle in cotizacion.detalles">{{ detalle.producto.nombre }}</p>
+                            </td>
                             <td>
                                 <span class="badge" :class="`bg-${getStatusBadge(cotizacion.estado)}`">
                                     {{ cotizacion.estado }}
@@ -185,11 +170,11 @@ function getStatusBadge(estado) {
                             <td>
                                 <button @click="openRespondForm(cotizacion)" class="btn btn-sm btn-warning me-2"
                                     title="Responder">
-                                    <i class="material-icons" :style="{fontSize: '12px'}">reply</i>
+                                    <i class="material-icons fs-6" :style="{ fontSize: '12px' }">reply</i>
                                 </button>
                                 <button @click="openDeleteModal(cotizacion)" class="btn btn-sm btn-danger"
                                     title="Eliminar">
-                                    <i class="material-icons" :style="{fontSize: '12px'}">delete</i>
+                                    <i class="material-icons fs-6" :style="{ fontSize: '12px' }">delete</i>
                                 </button>
                             </td>
                         </tr>
@@ -213,10 +198,25 @@ function getStatusBadge(estado) {
 
                 <div class="modal-body">
                     <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-4 mb-3" v-for="item in formData.productos" :key="item.producto.id">
+                                <div class="card h-100 text-center">
+                                    <img :src="`http://127.0.0.1:8000/storage/${item.producto.imagen}`"
+                                        :alt="item.producto.nombre" class="card-img-top object-fit-cover border rounded"
+                                        style="height: 100px; object-fit: cover;">
+                                    <div class="card-body p-2">
+                                        <p class="card-text fw-semibold">{{ item.producto.nombre }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label fw-bold">Estado</label>
-                        <select v-model="formData.estado" class="form-select">
+                        <select v-model="formData.estado" class="form-select px-2">
                             <option value="pendiente">Pendiente</option>
-                            <option value="respondida">Respondida</option>
+                            <option value="atendida">Atendida</option>
                             <option value="rechazada">Rechazada</option>
                         </select>
                     </div>
@@ -332,7 +332,7 @@ function getStatusBadge(estado) {
 
 .table-responsive {
     border-radius: 8px;
-    overflow: hidden;
+    overflow-y: hidden;
 }
 
 .table {

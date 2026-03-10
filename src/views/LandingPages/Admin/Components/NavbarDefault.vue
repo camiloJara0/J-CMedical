@@ -2,6 +2,7 @@
 import { RouterLink } from "vue-router";
 import { ref, watch, onMounted, onBeforeMount } from "vue";
 import { useWindowsWidth } from "../../../../assets/js/useWindowsWidth";
+import imageLogo from '@/assets/img/products/jyc_logo.png'
 
 // images
 import ArrDark from "@/assets/img/down-arrow-dark.svg";
@@ -112,8 +113,8 @@ function showNav () {
         (props.transparent && textDark) || !props.transparent
           ? 'text-dark font-weight-bolder ms-sm-3'
           : 'font-weight-bolder text-lg ms-sm-3'
-      ]" :to="{ name: 'presentation' }" rel="tooltip" title="Nombre Compañia" data-placement="bottom">
-        <img src="src/assets/img/products/jyc_logo.png" width="20" alt="Logo J&C Medical"/>
+      ]" :to="{ name: 'Inicio' }" rel="tooltip" title="Nombre Compañia" data-placement="bottom">
+        <img :src="imageLogo" width="20" alt="Logo J&C Medical"/>
         <span class="color-default">Panel de Administracion</span>
       </RouterLink>
 
@@ -147,9 +148,9 @@ function showNav () {
             </a>
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">
-            <a href="/inicio_sesion" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
+            <a href="/" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">account_circle</i>
-              Iniciar Sesión
+              Cerrar Sesión
             </a>
           </li>
         </ul>
