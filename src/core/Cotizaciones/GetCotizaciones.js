@@ -1,7 +1,7 @@
 export async function traerCotizaciones() {
   try {
     const token = localStorage.getItem('token')
-    const response = await fetch(`http://127.0.0.1:8000/api/solicitud_cotizacion`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/solicitud_cotizacion`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

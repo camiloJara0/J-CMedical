@@ -73,7 +73,7 @@ function abrirModal(title) {
         <!-- Búsqueda de producto -->
         <div class="col-lg-4 col-md-6 mb-3">
           <label class="form-label fw-bold">Buscar producto</label>
-          <input type="search" v-model="busqueda" class="form-control px-2" placeholder="Ej. Cable ECG..." />
+          <input type="search" v-model="busqueda" class="form-control border px-2" placeholder="Ej. Cable ECG..." />
         </div>
       </div>
 

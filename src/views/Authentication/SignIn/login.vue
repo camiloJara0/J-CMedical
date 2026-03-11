@@ -62,7 +62,7 @@ async function enviarFormulario(event) {
     }"
     loading="lazy"
   >
-    <!-- <span class="mask" style="background: rgba(34,98,163,0.7);"></span> -->
+    <span class="mask" style="background: rgba(34,98,163,0.7);"></span>
   </div>
 
   <!-- Contenedor principal -->
@@ -132,13 +132,21 @@ async function enviarFormulario(event) {
           <div class="card-footer text-center pt-0 px-lg-2 px-1">
             <p class="mb-4 text-sm mx-auto">
               ¿No tienes cuenta?
-              <a class="fw-bold" style="color:#2262a3;">Registrarme</a>
+              <a href="/" class="fw-bold" style="color:#2262a3;">Atras</a>
             </p>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+<div class="btn-float">
+  <a href="/" class="btn-circle">
+    <i class="material-icons fs-5">keyboard_return</i>
+    <span class="btn-text">Regresar al inicio</span>
+  </a>
+</div>
+
 </div>
 
 </template>
@@ -147,4 +155,42 @@ async function enviarFormulario(event) {
 body {
   background-color: black;
 }
+
+.btn-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.btn-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0d6efd; /* color Bootstrap primary */
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  transition: all 0.5s ease; /* delay + animación */
+  overflow: hidden;
+}
+
+.btn-circle .btn-text {
+  opacity: 0;
+  margin-left: 10px;
+  white-space: nowrap;
+  transition: opacity 0.4s ease;
+}
+
+.btn-circle:hover {
+  border-radius: 30px; /* deja de ser circular */
+  width: auto;
+  padding: 0 20px;
+}
+
+.btn-circle:hover .btn-text {
+  opacity: 1;
+}
+
 </style>

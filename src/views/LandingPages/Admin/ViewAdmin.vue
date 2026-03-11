@@ -3,89 +3,114 @@
 <template>
   <!-- Contenido principal -->
   <div class="container mt-2">
-    <div class="row text-center mb-4">
-      <h2>Bienvenido, Administrador</h2>
-      <p>Selecciona la sección a la que deseas acceder</p>
+
+    <!-- Header atractivo -->
+    <div class="page-header align-items-center min-height-300 mx-3 border-radius-xl position-relative" style="
+      background-image: url('public/headerLogin.jpg');
+      background-size: cover;
+      background-position: center;
+    ">
+      <span class="mask" style="background: linear-gradient(135deg, rgba(34,98,163,0.8), rgba(0,0,0,0.6));"></span>
+      <div class="row text-center text-white position-relative">
+        <h1 class="fw-bold mb-2">Bienvenido, Administrador</h1>
+        <p class="lead">Selecciona la sección a la que deseas acceder</p>
+      </div>
     </div>
 
-    <div class="row g-4">
+    <!-- Secciones -->
+    <div class="row g-4 mt-3">
       <!-- Productos -->
       <div class="col-md-3">
-        <div class="card shadow">
-          <div class="card-header">Productos</div>
+        <div class="card shadow h-100">
+          <div class="card-header bg-dark text-white d-flex align-items-center">
+            <i class="material-icons me-2">storefront</i> Productos
+          </div>
           <div class="card-body">
             <p>Gestiona el inventario y los detalles de tus productos.</p>
-            <a href="/Admin/Productos" class="btn btn-custom w-100">Acceder</a>
+            <a href="/Admin/Productos" class="btn btn-primary w-100">Acceder</a>
           </div>
         </div>
       </div>
 
       <!-- Categorías -->
       <div class="col-md-3">
-        <div class="card shadow">
-          <div class="card-header">Categorías</div>
+        <div class="card shadow h-100">
+          <div class="card-header bg-dark text-white d-flex align-items-center">
+            <i class="material-icons me-2">category</i> Categorías
+          </div>
           <div class="card-body">
             <p>Organiza tus productos en categorías personalizadas.</p>
-            <a href="/Admin/Categorias" class="btn btn-custom w-100">Acceder</a>
+            <a href="/Admin/Categorias" class="btn btn-success w-100">Acceder</a>
           </div>
         </div>
       </div>
 
       <!-- Cotizaciones -->
       <div class="col-md-3">
-        <div class="card shadow">
-          <div class="card-header">Cotizaciones</div>
+        <div class="card shadow h-100">
+          <div class="card-header bg-dark d-flex align-items-center">
+            <i class="material-icons me-2">attach_money</i> Cotizaciones
+          </div>
           <div class="card-body">
             <p>Administra las solicitudes y genera cotizaciones fácilmente.</p>
-            <a href="/Admin/Cotizaciones" class="btn btn-custom w-100">Acceder</a>
+            <a href="/Admin/Cotizaciones" class="btn btn-warning w-100">Acceder</a>
           </div>
         </div>
       </div>
 
       <!-- Usuarios -->
       <div class="col-md-3">
-        <div class="card shadow">
-          <div class="card-header">Usuarios</div>
+        <div class="card shadow h-100">
+          <div class="card-header bg-dark text-white d-flex align-items-center">
+            <i class="material-icons me-2">people</i> Usuarios
+          </div>
           <div class="card-body">
             <p>Controla el acceso y gestiona la información de los usuarios.</p>
-            <a href="#Usuarios" class="btn btn-custom w-100">Acceder</a>
+            <a href="#Usuarios" class="btn btn-danger w-100">Acceder</a>
           </div>
         </div>
       </div>
     </div>
   </div>
 
+
 </template>
 
 <style scoped>
-    body {
-      background-color: #f4f6f9;
-    }
-    .navbar {
-      background-color: #2262a3;
-    }
-    .navbar-brand {
-      color: #fff;
-      font-weight: bold;
-    }
-    .card {
-      border: none;
-      transition: transform 0.2s;
-    }
-    .card-header {
-      background-color: #4169e1;
-      color: #fff;
-      font-weight: bold;
-    }
-    .btn-custom {
-      background-color: #dd9d5c;
-      color: #fff;
-      font-weight: bold;
-    }
-    .btn-custom:hover {
-      background-color: #c2854a;
-      color: #fff;
-    }
+body {
+  background-color: #f4f6f9;
+}
+
+.navbar {
+  background-color: #2262a3;
+}
+
+.navbar-brand {
+  color: #fff;
+  font-weight: bold;
+}
+
+.card {
+  border: none;
+  transition: transform 0.2s;
+}
+
+.card-header {
+  background-color: #4169e1;
+  color: #fff;
+  font-weight: bold;
+}
+
+.btn-custom {
+  background-color: #dd9d5c;
+  color: #fff;
+  font-weight: bold;
+}
+
+.btn-custom:hover {
+  background-color: #c2854a;
+  color: #fff;
+}
 
 
 .contacto {
@@ -111,7 +136,7 @@
 .container-custom {
   /* background: linear-gradient(180deg,rgba(244, 244, 244, 1) 3%, rgba(34, 98, 163, 1) 40%, rgba(235, 237, 240, 1) 100%); */
   background: #FFFFFF;
-  background: linear-gradient(180deg,rgba(255, 255, 255, 1) 59%, rgba(237, 239, 242, 1) 91%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 59%, rgba(237, 239, 242, 1) 91%);
   height: 160vh;
   width: 100%;
   position: absolute;

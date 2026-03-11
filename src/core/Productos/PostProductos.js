@@ -3,15 +3,15 @@ export async function enviarProductos(isEditing, producto) {
 
         const token = localStorage.getItem('token')
         const url = isEditing ?
-            `http://127.0.0.1:8000/api/productos/${producto.id}` :
-            `http://127.0.0.1:8000/api/productos`
-        const method = isEditing ? 'PUT' : 'POST'
+            `${import.meta.env.VITE_BACKEND_URL}/api/actualiza_productos` :
+            `${import.meta.env.VITE_BACKEND_URL}/api/productos`
+        const method = isEditing ? 'POST' : 'POST'
 
         // Construir FormData
         const formData = new FormData();
         formData.append("nombre", producto.nombre);
         formData.append("descripcion", producto.descripcion);
-        formData.append("precio_referencial", producto.precio);
+        formData.append("precio_referencial", producto.precio || '');
         formData.append("stock", producto.stock);
         formData.append("categoria_id", producto.categoria_id);
 
@@ -23,7 +23,7 @@ export async function enviarProductos(isEditing, producto) {
         }
 
         if (isEditing) {
-            formData.append("_method", "PUT");
+            // formData.append("_method", "PUT");
             formData.append("id", producto.id);
         }
 

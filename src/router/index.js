@@ -44,9 +44,10 @@ const router = createRouter({
           component: Categorias,
         },
         {
-          path: "Cotizaciones",     // /Admin/Cotizaciones
+          path: "Cotizaciones/:id?",     // /Admin/Cotizaciones
           name: "Cotizaciones",
           component: Cotizaciones,
+          props: true,
         },
         {
           path: "Usuarios",     // /Admin/Usuarios

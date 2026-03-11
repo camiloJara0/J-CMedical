@@ -3,8 +3,8 @@ export async function enviarCategorias(isEditing, categoria) {
         const token = localStorage.getItem('token')
         const method = isEditing ? 'PUT' : 'POST'
         const url = isEditing ?
-            `http://127.0.0.1:8000/api/categorias/${categoria.id}` :
-            `http://127.0.0.1:8000/api/categorias`
+            `${import.meta.env.VITE_BACKEND_URL}/api/categorias/${categoria.id}` :
+            `${import.meta.env.VITE_BACKEND_URL}/api/categorias`
         const response = await fetch(url, {
             method: method,
             headers: {

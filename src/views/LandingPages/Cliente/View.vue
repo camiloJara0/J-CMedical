@@ -21,6 +21,10 @@ const body = document.getElementsByTagName("body")[0];
 onMounted(() => {
   body.classList.add("coworking");
   body.classList.add("bg-gray-200");
+
+  localStorage.removeItem('token')
+  localStorage.removeItem('rol')
+  localStorage.removeItem('user')
 });
 
 onUnmounted(() => {

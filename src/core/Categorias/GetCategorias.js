@@ -1,6 +1,6 @@
 export async function traerCategorias() {
   try {
-    const response = await fetch(`http://127.0.0.1:8000/api/getcategorias`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/getcategorias`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useAppStore } from '../../../../stores'
+import PaginationComponent from '../Components/PaginationComponent.vue'
 
 const usuarios = ref([])
 const showFormModal = ref(false)
@@ -19,6 +20,8 @@ const formData = ref({
 
 const selectedUsuario = ref(null)
 const searchTerm = ref('')
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
 
 const usuariosFiltrados = computed(() => {
   return usuarios.value.filter(u =>
@@ -27,8 +30,15 @@ const usuariosFiltrados = computed(() => {
   )
 })
 
+const usuariosPaginados = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return usuariosFiltrados.value.slice(start, end)
+})
+
 onMounted(async () => {
   await loadData()
+  currentPage.value = 1
 })
 
 async function loadData() {
@@ -203,7 +213,7 @@ function getRolBadge(rol) {
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody>Pagin
             <tr v-for="usuario in usuariosFiltrados" :key="usuario.id">
               <td class="fw-bold">{{ usuario.nombre }}</td>
               <td>{{ usuario.email }}</td>
@@ -234,6 +244,16 @@ function getRolBadge(rol) {
         <div v-if="usuariosFiltrados.length === 0" class="alert alert-info text-center">
           No hay usuarios que mostrar
         </div>
+
+      <!-- Paginación -->
+      <PaginationComponent
+        v-if="usuariosFiltrados.length > 0"
+        :currentPage="currentPage"
+        :totalItems="usuariosFiltrados.length"
+        :itemsPerPage="itemsPerPage"
+        @update:currentPage="currentPage = $event"
+        @update:itemsPerPage="itemsPerPage = $event"
+      />
       </div>
     </div>
   </section>

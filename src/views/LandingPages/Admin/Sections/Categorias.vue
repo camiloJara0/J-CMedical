@@ -4,6 +4,7 @@ import { useAppStore } from '../../../../stores'
 import { traerCategorias } from '../../../../core/Categorias/GetCategorias'
 import { enviarCategorias } from '../../../../core/Categorias/PostCategorias'
 import { eliminarCategoria } from '../../../../core/Categorias/DeleteCategoria'
+import PaginationComponent from '../Components/PaginationComponent.vue'
 
 const categorias = ref([])
 const showFormModal = ref(false)
@@ -20,14 +21,24 @@ const formData = ref({
 
 const selectedCategoria = ref(null)
 const searchTerm = ref('')
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
 
 const categoriasFiltradas = computed(() => {
+    currentPage.value = 1
     return categorias.value.filter(c =>
         c.nombre.toLowerCase().includes(searchTerm.value.toLowerCase())
     )
 })
 
+const categoriasPaginadas = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value
+    const end = start + itemsPerPage.value
+    return categoriasFiltradas.value.slice(start, end)
+})
+
 onMounted(async () => {
+    currentPage.value = 1
     await loadData()
 })
 
@@ -135,9 +146,9 @@ async function deleteCategoria() {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="categoria in categoriasFiltradas" :key="categoria.id">
+                        <tr v-for="categoria in categoriasPaginadas" :key="categoria.id">
                             <td class="fw-bold">{{ categoria.nombre }}</td>
-                            <td>{{ categoria.descripcion || 'Sin descripción' }}</td>
+                            <td>{{ categoria.descripcion?.substring(0, 100) || 'Sin descripción' }}...</td>
                             <td>
                                 <button @click="openEditForm(categoria)" class="btn btn-sm btn-warning me-2"
                                     title="Editar">
@@ -154,7 +165,17 @@ async function deleteCategoria() {
                 <div v-if="categoriasFiltradas.length === 0" class="alert alert-info text-center">
                     No hay categorías que mostrar
                 </div>
+
             </div>
+            <!-- Paginación -->
+            <PaginationComponent
+                v-if="categoriasFiltradas.length > 0"
+                :currentPage="currentPage"
+                :totalItems="categoriasFiltradas.length"
+                :itemsPerPage="itemsPerPage"
+                @update:currentPage="currentPage = $event"
+                @update:itemsPerPage="itemsPerPage = $event"
+            />
         </div>
     </section>
 
@@ -163,8 +184,10 @@ async function deleteCategoria() {
         <div v-if="showFormModal" class="modal-overlay">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5>{{ isEditing ? 'Editar Categoría' : 'Nueva Categoría' }}</h5>
-                    <button @click="showFormModal = false" class="btn-close"></button>
+                    <h5 class="m-0">{{ isEditing ? 'Editar Categoría' : 'Nueva Categoría' }}</h5>
+                    <button @click="showFormModal = false" class="btn-close">
+                        <i class="material-icons">close</i>
+                    </button>
                 </div>
 
                 <div class="modal-body">

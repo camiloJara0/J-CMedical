@@ -147,7 +147,7 @@ function validarCorreo(correo) {
               </div>
               <div class="card-body">
                 <p class="pb-3 d-md-block d-none">
-                  Déjanos tus datos y un asesor especializado se pondrá en contacto contigo para brindarte la
+                  Déjanos tus datos y brevemente nos pondremos en contacto contigo para brindarte la
                   información que necesitas.
                 </p>
                 <form id="contact-form" method="post" autocomplete="off">
@@ -164,7 +164,7 @@ function validarCorreo(correo) {
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <MaterialInput class="input-group-static mb-4" type="text" label="NIT o Cedula" placeholder="Digita NIT"
+                        <MaterialInput class="input-group-static mb-4" type="text" label="NIT o Cédula" placeholder="Digita NIT o Cédula"
                           v-model="formData.nit" :modelValue="formData.nit" />
                       </div>
                       <div class="col-md-6">
@@ -178,7 +178,7 @@ function validarCorreo(correo) {
                       </div>
                     </div>
                     <div class="form-group mb-0 mt-md-0 mt-4">
-                      <MaterialTextArea id="message" class="input-group-static mb-4" :rows="4" placeholder="Necesito..."
+                      <MaterialTextArea id="message" class="input-group-static mb-4" :rows="4" placeholder="Necesito conector..."
                         v-model="formData.mensaje" :modelValue="formData.mensaje">Descripcion
                       </MaterialTextArea>
                     </div>

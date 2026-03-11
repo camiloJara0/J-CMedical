@@ -2,13 +2,16 @@ export async function eliminarCotizacion(cotizacion) {
     try {
         const token = localStorage.getItem('token')
 
-        const response = await fetch(`http://127.0.0.1:8000/api/solicitud_cotizacion/${cotizacion.id}`, {
-            method: 'DELETE',
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/eliminar_cotizacion`, {
+            method: 'POST',
             headers: {
+                'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${token}`,
             },
-            body: JSON.stringify(cotizacion)
+            body: JSON.stringify({
+                id: cotizacion.id
+            })
         });
 
         if (!response.ok) {

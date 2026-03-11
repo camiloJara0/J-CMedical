@@ -5,6 +5,7 @@ import { traerProductos } from '../../../../core/Productos/GetProductos'
 import { traerCategorias } from '../../../../core/Categorias/GetCategorias'
 import { enviarProductos, reducirImagen } from '../../../../core/Productos/PostProductos'
 import { eliminarProductos } from '../../../../core/Productos/DeleteProductos'
+import PaginationComponent from '../Components/PaginationComponent.vue'
 
 const productos = ref([])
 const categorias = ref([])
@@ -26,15 +27,25 @@ const formData = ref({
 
 const selectedProducto = ref(null)
 const searchTerm = ref('')
+const currentPage = ref(1)
+const itemsPerPage = ref(10)
 
 const productosFiltrados = computed(() => {
+  currentPage.value = 1
   return productos.value.filter(p =>
     p.nombre.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
     p.descripcion.toLowerCase().includes(searchTerm.value.toLowerCase())
   )
 })
 
+const productosPaginados = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value
+  const end = start + itemsPerPage.value
+  return productosFiltrados.value.slice(start, end)
+})
+
 onMounted(async () => {
+    currentPage.value = 1
   await loadData()
 })
 
@@ -43,6 +54,7 @@ async function loadData() {
     loading.value = true
     productos.value = await traerProductos()
     categorias.value = await traerCategorias()
+    currentPage.value = 1
   } catch (error) {
     store.mostrarAlerta('Error al cargar productos', 'danger')
   } finally {
@@ -67,6 +79,8 @@ function openEditForm(producto) {
   isEditing.value = true
   selectedProducto.value = producto
   formData.value = { ...producto }
+  selectedProducto.value.imagen = ''
+  formData.value.imagen = ''
   showFormModal.value = true
 }
 
@@ -158,7 +172,7 @@ async function onFileChange(event) {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="producto in productosFiltrados" :key="producto.id">
+            <tr v-for="producto in productosPaginados" :key="producto.id">
               <td class="fw-bold">{{ producto.nombre }}</td>
               <td>{{ producto.descripcion?.substring(0, 50) }}...</td>
               <td>{{ getCategoriaName(producto.categoria_id) }}</td>
@@ -177,7 +191,17 @@ async function onFileChange(event) {
         <div v-if="productosFiltrados.length === 0" class="alert alert-info text-center">
           No hay productos que mostrar
         </div>
+
       </div>
+      <!-- Paginación -->
+      <PaginationComponent
+        v-if="productosFiltrados.length > 0"
+        :currentPage="currentPage"
+        :totalItems="productosFiltrados.length"
+        :itemsPerPage="itemsPerPage"
+        @update:currentPage="currentPage = $event"
+        @update:itemsPerPage="itemsPerPage = $event"
+      />
     </div>
   </section>
 
@@ -186,8 +210,10 @@ async function onFileChange(event) {
     <div v-if="showFormModal" class="modal-overlay">
       <div class="modal-content">
         <div class="modal-header">
-          <h5>{{ isEditing ? 'Editar Producto' : 'Nuevo Producto' }}</h5>
-          <button @click="showFormModal = false" class="btn-close"></button>
+          <h5 class="m-0">{{ isEditing ? 'Editar Producto' : 'Nuevo Producto' }}</h5>
+          <button @click="showFormModal = false" class="btn-close">
+            <i class="material-icons">close</i>
+          </button>
         </div>
 
         <div class="modal-body">
@@ -222,10 +248,7 @@ async function onFileChange(event) {
           <div class="row">
             <div class="col-md-6 input-grop mb-3">
               <label class="form-label fw-bold">URL Imagen</label>
-              <div class="input-group">
-                <input @change="onFileChange" type="file" class="form-control" placeholder="Selecciona una imagen" id="inputGroupFile" />
-                <label class="input-group-text" for="inputGroupFile">Cargar</label>
-              </div>
+              <input @change="onFileChange" type="file" class="form-control" placeholder="Selecciona una imagen" id="inputGroupFile" />
             </div>
 
             <div class="col-md-6 mb-3">

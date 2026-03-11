@@ -3,7 +3,7 @@
 import SimpleInfoCard from "../../../../examples/cards/infoCards/SimpleInfoCard.vue";
 </script>
 <template>
-  <section class="py-md-7 mt-5">
+  <section class="py-md-4 mt-5">
     <div class="container">
       <div class="row justify-content-start">
         <div class="col-md-4 ms-md-auto me-md-4 gap-2">
