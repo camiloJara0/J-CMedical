@@ -33,9 +33,6 @@ onUnmounted(() => {
 });
 
 const store = useAppStore()
-function cerrarModal() {
-  store.showModal = false
-}
 </script>
 <template>
   <div class="container-custom"></div>
@@ -63,23 +60,6 @@ function cerrarModal() {
   </div>
 
   <DefaultFooter />
-
-  <!-- Modal productos -->
-  <div class="fondo" v-if="store.showModal">
-    <div class="modal-custom">
-      <div class="header-modal-custom">
-        <h3>{{ store.informacion.title }}</h3>
-        <button @click="cerrarModal()" type="button" class="btn-close text-xl py-3 opacity-10" data-bs-dismiss="alert"
-          aria-label="Close">
-          <i class="material-icons text-xl font-weight-bold text-dark">close</i>
-        </button>
-      </div>
-      <div class="header-modal-body">
-        <!-- <img :src="store.informacion.image" alt="" loading="lazy"> -->
-        <img v-for="image in store.informacion.images" :src="image" alt="" loading="lazy">
-      </div>
-    </div>
-  </div>
 
   <!-- Alerta -->
   <div class="fondoAlert" v-if="store.showAlert">
@@ -149,62 +129,6 @@ function cerrarModal() {
   justify-content: end;
   align-items: start;
   overflow-y: none;
-}
-
-.modal-custom {
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 24px;
-  width: 90%;
-  max-width: 500px;
-  max-height: 80vh;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  overflow: hidden;
-  position: relative;
-}
-
-.header-modal-custom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.header-modal-custom h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-}
-
-.close-button {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #333;
-  transition: color 0.2s ease;
-}
-
-.close-button:hover {
-  color: #ff4d4d;
-}
-
-.header-modal-body {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  max-height: 60vh;
-  min-height: 40vh;
-  overflow-y: auto;
-}
-
-.header-modal-body img {
-  max-width: 100%;
-  max-height: 60vh;
-  object-fit: contain;
-  border-radius: 8px;
 }
 
 .container-contacto {

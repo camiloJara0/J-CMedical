@@ -12,10 +12,10 @@ export const useAppStore = defineStore("storeId", {
   }),
 
   actions: {
-    async agregarProducto(producto) {
+    agregarProducto(producto) {
       this.carrito.push(producto)
-      await this.mostrarAlerta('Nuevo producto añadido', 'success')
-      console.log(this.carrito)
+      this.showModal = false
+      this.mostrarAlerta('Nuevo producto añadido', 'success')
     },
 
     eliminarProducto(producto) {

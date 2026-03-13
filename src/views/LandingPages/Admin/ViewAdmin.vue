@@ -12,7 +12,7 @@
     ">
       <span class="mask" style="background: linear-gradient(135deg, rgba(34,98,163,0.8), rgba(0,0,0,0.6));"></span>
       <div class="row text-center text-white position-relative">
-        <h1 class="fw-bold mb-2">Bienvenido, Administrador</h1>
+        <h1 class="fw-bold mb-2 text-white">Bienvenido, Administrador</h1>
         <p class="lead">Selecciona la sección a la que deseas acceder</p>
       </div>
     </div>

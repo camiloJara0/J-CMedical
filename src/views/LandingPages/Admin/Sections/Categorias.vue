@@ -148,7 +148,7 @@ async function deleteCategoria() {
                     <tbody>
                         <tr v-for="categoria in categoriasPaginadas" :key="categoria.id">
                             <td class="fw-bold">{{ categoria.nombre }}</td>
-                            <td>{{ categoria.descripcion?.substring(0, 100) || 'Sin descripción' }}...</td>
+                            <td>{{ categoria.descripcion?.substring(0, 100) || 'Sin descripción' }}<span v-if="categoria.descripcion?.length > 50">...</span></td>
                             <td>
                                 <button @click="openEditForm(categoria)" class="btn btn-sm btn-warning me-2"
                                     title="Editar">

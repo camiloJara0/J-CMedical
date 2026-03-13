@@ -38,32 +38,38 @@ async function enviarMensaje(event) {
   // Validaciones
   if (!nombre || !correo || !nit || !mensaje) {
     mostrarAlerta('Por favor completa todos los campos.', 'warning');
+    store.cargando = false
     return;
   }
 
   if (!validarCorreo(correo)) {
     mostrarAlerta('El correo electrónico no es válido.', 'warning');
+    store.cargando = false
     return;
   }
 
   if (nit.length < 5) {
     mostrarAlerta('El NIT debe tener al menos 5 caracteres.', 'warning');
+    store.cargando = false
     return;
   }
 
   if (mensaje.length < 10) {
     mostrarAlerta('El mensaje debe tener al menos 10 caracteres.', 'warning');
+    store.cargando = false
     return;
   }
 
   if (productos.length < 1) {
     console.log(productos)
     mostrarAlerta('Añade algun producto al carrito.', 'warning');
+    store.cargando = false
     return;
   }
 
-  if (!(file instanceof File)) {
+  if (file && !(file instanceof File)) {
     mostrarAlerta('El archivo no es valido.', 'warning');
+    store.cargando = false
     return
   }
 
@@ -114,21 +120,24 @@ function validarCorreo(correo) {
             }" loading="lazy">
 
               <!-- Overlay con degradado -->
-              <div v-if="store.carrito.length" class="h-100 w-100 d-flex flex-column rounded-2 p-4 overflow-auto" :style="{
-                background: 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8))'
-              }">
+              <div v-if="store.carrito.length" class="h-100 w-100 d-flex flex-column rounded-2 p-4 overflow-auto"
+                :style="{
+                  background: 'linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.8))'
+                }">
 
                 <h4 class="text-white fw-bold mb-3">Productos añadidos</h4>
 
                 <div v-for="product in store.carrito" :key="product.id"
                   class="bg-white rounded-3 shadow-sm p-3 mb-3 d-flex align-items-center gap-3 position-relative">
-                  <img :src="product.imagen" :alt="product.nombre" width="100" height="80" class="rounded-2 object-fit-cover">
+                  <img :src="product.imagen" :alt="product.nombre" width="100" height="80"
+                    class="rounded-2 object-fit-cover">
                   <div class="text-start">
                     <p class="mb-1 fw-semibold text-dark">{{ product.nombre }}</p>
                     <small class="text-muted">Precio: {{ product.precio_referencial }}</small>
                   </div>
                   <div class="position-absolute end-1">
-                    <div class="d-flex justify-center align-items-center rounded-circle cursor-pointer" @click="store.eliminarProducto(product)">
+                    <div class="d-flex justify-center align-items-center rounded-circle cursor-pointer"
+                      @click="store.eliminarProducto(product)">
                       <i class="material-icons me-2 color-warning">close</i>
                     </div>
                   </div>
@@ -154,22 +163,22 @@ function validarCorreo(correo) {
                   <div class="card-body p-0 my-3">
                     <div class="row">
                       <div class="col-md-6">
-                        <MaterialInput class="input-group-static mb-4" type="text" label="Nombre completo"
+                        <MaterialInput class="input-group-static mb-4" type="text" label="Nombre completo *"
                           placeholder="Ej. Juan Perez" v-model="formData.nombre" :modelValue="formData.nombre" />
                       </div>
                       <div class="col-md-6 ps-md-2">
-                        <MaterialInput class="input-group-static mb-4" type="email" label="Correo"
+                        <MaterialInput class="input-group-static mb-4" type="email" label="Correo *"
                           placeholder="juan@gmail.com" v-model="formData.correo" :modelValue="formData.correo" />
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-6">
-                        <MaterialInput class="input-group-static mb-4" type="text" label="NIT o Cédula" placeholder="Digita NIT o Cédula"
-                          v-model="formData.nit" :modelValue="formData.nit" />
+                        <MaterialInput class="input-group-static mb-4" type="text" label="NIT o Cédula *"
+                          placeholder="Digita NIT o Cédula" v-model="formData.nit" :modelValue="formData.nit" />
                       </div>
                       <div class="col-md-6">
-                        <MaterialInput class="input-group-static mb-4" type="text" label="Telefono" placeholder="Número de Celular"
-                          v-model="formData.telefono" :modelValue="formData.telefono" />
+                        <MaterialInput class="input-group-static mb-4" type="text" label="Telefono"
+                          placeholder="Número de Celular" v-model="formData.telefono" :modelValue="formData.telefono" />
                       </div>
                       <div class="col-12">
                         <MaterialInput class="input-group-static mb-4" type="file"
@@ -178,8 +187,9 @@ function validarCorreo(correo) {
                       </div>
                     </div>
                     <div class="form-group mb-0 mt-md-0 mt-4">
-                      <MaterialTextArea id="message" class="input-group-static mb-4" :rows="4" placeholder="Necesito conector..."
-                        v-model="formData.mensaje" :modelValue="formData.mensaje">Descripcion
+                      <MaterialTextArea id="message" class="input-group-static mb-4" :rows="4"
+                        placeholder="Necesito conector..." v-model="formData.mensaje" :modelValue="formData.mensaje">
+                        Descripcion *
                       </MaterialTextArea>
                     </div>
                     <div class="row">

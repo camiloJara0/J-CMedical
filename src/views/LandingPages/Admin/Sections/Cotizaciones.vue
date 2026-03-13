@@ -141,6 +141,10 @@ function getStatusBadge(estado) {
     }
     return statusMap[estado] || 'secondary'
 }
+
+function eliminarRuta () {
+    localStorage.removeItem('cotizacion')
+}
 </script>
 
 <template>
@@ -163,7 +167,7 @@ function getStatusBadge(estado) {
                         <option value="rechazada">Rechazadas</option>
                     </select>
                 </div>
-                <a href="/Admin/Cotizaciones" v-if="props.id" class="w-25 d-flex align-items-center gap-1 py-2 text-danger">
+                <a href="/Admin/Cotizaciones" v-if="props.id" @click="eliminarRuta" class="w-25 d-flex align-items-center gap-1 py-2 text-danger">
                     Mostrar Todos
                     <div class="page-link page-link-circle">
                         <i class="material-icons text-danger">keyboard_return</i>
@@ -324,7 +328,7 @@ function getStatusBadge(estado) {
 .modal-content {
     background-color: white;
     border-radius: 8px;
-    max-width: 600px;
+    max-width: 800px;
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;

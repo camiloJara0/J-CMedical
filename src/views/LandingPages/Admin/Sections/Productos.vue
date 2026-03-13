@@ -54,7 +54,7 @@ async function loadData() {
     loading.value = true
     productos.value = await traerProductos()
     categorias.value = await traerCategorias()
-    currentPage.value = 1
+    // currentPage.value = 1
   } catch (error) {
     store.mostrarAlerta('Error al cargar productos', 'danger')
   } finally {
@@ -173,8 +173,8 @@ async function onFileChange(event) {
           </thead>
           <tbody>
             <tr v-for="producto in productosPaginados" :key="producto.id">
-              <td class="fw-bold">{{ producto.nombre }}</td>
-              <td>{{ producto.descripcion?.substring(0, 50) }}...</td>
+              <td class="fw-bold">{{ producto.nombre?.substring(0, 50) }}<span v-if="producto.nombre.length > 50">...</span></td>
+              <td>{{ producto.descripcion?.substring(0, 50) }}<span v-if="producto.descripcion?.length > 50">...</span></td>
               <td>{{ getCategoriaName(producto.categoria_id) }}</td>
               <td>${{ producto.precio }}</td>
               <td>

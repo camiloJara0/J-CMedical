@@ -53,7 +53,7 @@ const store = useAppStore()
           class="btn btn-sm mb-0"
           :class="`btn-outline-${action.color} bg-custom-default`"
           name="button"
-          @click="action.action(title)"
+          @click="action.action(producto)"
         >
           Mas Información
         </button>
