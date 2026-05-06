@@ -20,6 +20,8 @@
 .skeleton {
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: 27rem;
 }
 
 .skeleton::after {

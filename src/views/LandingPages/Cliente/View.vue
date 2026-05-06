@@ -12,6 +12,7 @@ import Information from "./Sections/Information.vue";
 import Testimonials from "./Sections/Testimonials.vue";
 import AboutUs from "./Sections/AboutUs.vue";
 import Productos from "./Sections/Productos.vue";
+import InfoProducts from "./Sections/InfoProducts.vue";
 import { useAppStore } from "../../../stores";
 import ContactView from "./Components/ContactView.vue";
 
@@ -55,7 +56,7 @@ const store = useAppStore()
     <Information />
     <Testimonials />
     <AboutUs id="SobreNosotros" />
-    <Productos id="Productos" />
+    <InfoProducts id="InfoProductos" />
     <ContactView id="Contactanos"/>
   </div>
 

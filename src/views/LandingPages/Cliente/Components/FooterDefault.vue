@@ -1,5 +1,4 @@
 <script setup>
-import logoDark from "@/assets/img/logo-ct-dark.png";
 defineProps({
   brand: {
     type: Object,
@@ -8,7 +7,6 @@ defineProps({
     route: "",
     default: () => ({
       name: "J&C MEDICAL",
-      logo: logoDark,
       route: "/",
     }),
   },
@@ -69,43 +67,20 @@ defineProps({
         ],
       },
       {
-        name: "Ayuda y Soporte",
+        name: "Nuestra Ubicacion",
         items: [
           {
-            name: "Contactanos",
+            name: "Colombia, Valle del Cauca",
             href: "#Contactanos",
             target: '',
-          },
-          {
-            name: "Facebook",
-            href: "https://www.facebook.com/",
-            target: '_blank',
-          },
-          {
-            name: "Instagram",
-            href: "https://www.instagram.com/",
-            target: '_blank',
-          },
-          {
-            name: "Gmail",
-            href: "https://mail.google.com/",
-            target: '_blank',
           },
         ],
       },
       {
-        name: "legal",
+        name: "Horario de atención",
         items: [
           {
-            name: "terms & conditions",
-            target: '_blank',
-          },
-          {
-            name: "privacy policy",
-            target: '_blank',
-          },
-          {
-            name: "licenses (EULA)",
+            name: "Lunes a Sabado: 7:00am - 5:00pm",
             target: '_blank',
           },
         ],
@@ -117,7 +92,7 @@ defineProps({
 <template>
   <footer class="footer pt-5 mt-5">
     <div class="container">
-      <div class="row">
+      <div class="row d-flex justify-content-between">
         <div class="col-md-3 mb-4">
           <div class="footer-custom">
             <a :href="brand.route">
@@ -163,7 +138,7 @@ defineProps({
 </template>
 <style scoped>
 .footer-logo {
-  max-width: 3rem !important;
+  max-width: 6rem !important;
   margin-bottom: 0;
 }
 

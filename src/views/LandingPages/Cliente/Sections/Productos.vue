@@ -7,54 +7,21 @@ import { useAppStore } from "../../../../stores";
 import { traerProductos } from "../../../../core/Productos/GetProductos";
 import { traerCategorias } from "../../../../core/Categorias/GetCategorias";
 import SkeletonProduct from "../Components/SkeletonProduct.vue";
+import { useProductosStore } from "../../../../stores/productos";
+import { storeToRefs } from 'pinia'
 
-const productos = ref([])
-const categorias = ref([])
-const categoriaSeleccionada = ref('')
-const busqueda = ref('')
-const loading = ref(true)
-const error = ref(null)
+const productosStore = useProductosStore()
+
+const { productos, categorias, productosFiltrados, loading, error, busqueda, categoriaSeleccionada, orden } = storeToRefs(productosStore)
+
+const { llamaDatos, borrarFiltros, ordenar } = productosStore
 
 onMounted(async () => {
   await llamaDatos()
 })
 
-async function llamaDatos() {
-  try {
-    loading.value = true
-    error.value = null
-    const [productosData, categoriasData] = await Promise.all([
-      traerProductos(),
-      traerCategorias()
-    ])
-    productos.value = productosData || []
-    categorias.value = categoriasData || []
-  } catch (err) {
-    error.value = err.message || 'Error al cargar los datos. Por favor intenta nuevamente.'
-    productos.value = []
-    categorias.value = []
-  } finally {
-    loading.value = false
-  }
-}
-
-const productosFiltrados = computed(() => {
-  return productos.value.filter((p) => {
-    const coincideCategoria = !categoriaSeleccionada.value || p.categoria_id === categoriaSeleccionada.value;
-    const coincideBusqueda = p.nombre.toLowerCase().includes(busqueda.value.toLowerCase());
-    return coincideCategoria && coincideBusqueda;
-  });
-})
-
-const tarjetasPorFila = computed(() => {
-  const filas = [];
-  for (let i = 0; i < productosFiltrados.value.length; i += 3) {
-    filas.push(productosFiltrados.value.slice(i, i + 3));
-  }
-  return filas;
-})
-
 const store = useAppStore()
+const grid = ref(false)
 
 function abrirModal(producto) {
   store.showModal = true
@@ -69,39 +36,37 @@ async function recargar() {
 function cerrarModal() {
   store.showModal = false
 }
+
+function cambiarColumnas() {
+  // Lógica para cambiar el número de columnas (ejemplo: alternar entre 3 y 4 columnas)
+  console.log("Cambiando columnas")
+  grid.value = !grid.value
+}
 </script>
 <template>
-  <section class="features-3 py-4">
+  <section class="features-3 py-4" style="width: 100%;">
     <div class="container">
-      <div class="row text-center justify-content-center">
-        <div class="col-lg-6">
-          <h2>Explora nuestros productos</h2>
-          <p>
-            Contamos con una línea especializada de accesorios compatibles con equipos de monitoreo clínico,
-            seleccionados cuidadosamente para garantizar rendimiento, durabilidad y seguridad. Nuestros productos
-            incluyen:
-          </p>
-        </div>
-
-      </div>
 
       <!-- Barra de búsqueda -->
-      <div class="row text-center justify-content-center my-5">
-        <!-- Selección de categoría -->
-        <div class="col-lg-4 col-md-6 mb-3">
-          <label class="form-label fw-bold">Seleccionar categoría</label>
-          <select v-model="categoriaSeleccionada" class="form-select px-2">
-            <option value="">Todas</option>
-            <option v-for="c in categorias" :key="c.id" :value="c.id">
-              {{ c.nombre }}
-            </option>
-          </select>
-        </div>
+      <div class="row text-center justify-content-end my-2">
 
         <!-- Búsqueda de producto -->
-        <div class="col-lg-4 col-md-6 mb-3">
-          <label class="form-label fw-bold">Buscar producto</label>
-          <input type="search" v-model="busqueda" class="form-control border px-2" placeholder="Ej. Cable ECG..." />
+        <div class="col-lg-4 col-md-6 mb-3 d-flex align-items-center justify-content-end gap-2">
+          <button v-if="categoriaSeleccionada || busqueda || orden === 'desc'"
+            class="btn d-flex align-items-center gap-1" @click="borrarFiltros">
+            <span class="material-icons">filter_list</span>
+            Limpiar
+          </button>
+
+          <button class="btn d-flex align-items-center gap-1" @click="ordenar">
+            <span class="material-icons">sort_by_alpha</span>
+            Ordenar
+          </button>
+
+          <button class="btn d-flex align-items-center gap-1" @click="cambiarColumnas">
+            <span class="material-icons">view_column</span>
+            Cambiar
+          </button>
         </div>
       </div>
 
@@ -133,7 +98,7 @@ function cerrarModal() {
       </div>
 
       <!-- Estado: Sin productos (sin resultados por filtro o no hay datos) -->
-      <div v-if="!loading && !error && productosFiltrados.length === 0" class="row mt-5">
+      <div v-if="!loading && !error && productosStore.productosFiltrados.length === 0" class="row mt-5">
         <div class="col-lg-8 mx-auto text-center">
           <div class="mb-4">
             <svg width="120" height="120" viewBox="0 0 120 120" fill="none" class="mb-4 opacity-75">
@@ -159,51 +124,97 @@ function cerrarModal() {
       </div>
 
       <!-- Estado: Mostrar productos -->
-      <div v-if="!loading && !error && productosFiltrados.length > 0" class="row mt-5"
-        v-for="(grupo, filaIndex) in tarjetasPorFila" :key="filaIndex">
-        <div class="col-lg-4 mb-4" v-for="(tarjeta, colIndex) in grupo" :key="colIndex">
+      <div v-if="!loading && !error && productosStore.productosFiltrados.length > 0"
+        class="contenedorTarjetas row mt-5">
+        <div class="mb-4" :class="{ 'col-xl-3 col-lg-4 col-md-6': grid, 'col-xl-4 col-lg-6 col-md-6': !grid }"
+          v-for="(tarjeta, colIndex) in productosFiltrados" :key="colIndex">
           <SimpleBlogCard :image="tarjeta.imagen" :title="tarjeta.nombre" :description="tarjeta.descripcion"
             :action="{ color: 'dark', action: abrirModal }" :producto="tarjeta" class="mb-4" />
         </div>
       </div>
 
-      <!-- Modal Producto -->
-      <!-- Modal Producto -->
+
+      <!-- Modal Producto Mejorado -->
       <Teleport to="body">
-        <div class="fondo" v-if="store.showModal">
-          <div class="modal-custom">
-            <!-- Encabezado -->
-            <div class="header-modal-custom">
-              <h3>{{ store.informacion.nombre }}</h3>
-              <button @click="cerrarModal()" type="button" class="close-button" aria-label="Close">
+        <div v-if="store.showModal" class="ux-backdrop d-flex align-items-center justify-content-center">
+
+          <div class="ux-modal container-fluid p-0">
+
+            <!-- HEADER -->
+            <div class="ux-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom">
+              <h5 class="m-0 fw-semibold text-truncate">
+                {{ store.informacion.nombre }}
+              </h5>
+
+              <button @click="cerrarModal()" class="ux-close-btn">
                 <i class="material-icons">close</i>
               </button>
             </div>
 
-            <!-- Imagen -->
-            <div class="header-modal-body">
-              <img :src="store.informacion.imagen" alt="Imagen del producto" loading="lazy">
+            <!-- BODY -->
+            <div class="row g-0 ux-body">
+
+              <!-- GALERÍA -->
+              <div class="col-md-6 ux-gallery p-4">
+                <div class="ux-img-wrapper">
+                  <img :src="store.informacion.imagen" class="img-fluid ux-main-img" alt="producto">
+                </div>
+              </div>
+
+              <!-- INFO + COMPRA -->
+              <div class="col-md-6 ux-info p-4 d-flex flex-column">
+
+                <!-- PRECIO + ESTADO -->
+                <div class="mb-3 d-flex align-items-center gap-3">
+                  <span class="ux-price">
+                    {{ store.informacion.precio_referencial || '—' }}
+                  </span>
+
+                  <span class="badge ms-2" :class="store.informacion.stock > 0 ? 'bg-success' : 'bg-danger'">
+                    {{ store.informacion.stock > 0 ? 'Disponible' : 'Sin stock' }}
+                  </span>
+                </div>
+
+                <!-- DESCRIPCIÓN -->
+                <p class="ux-description">
+                  {{ store.informacion.descripcion }}
+                </p>
+
+                <!-- ATRIBUTOS -->
+                <div class="ux-attributes mb-3">
+                  <div><strong>Marca:</strong> {{ store.informacion.marca || '—' }}</div>
+                  <div><strong>Modelo:</strong> {{ store.informacion.modelo || '—' }}</div>
+                  <div><strong>Conector:</strong> {{ store.informacion.tipo_conector || '—' }}</div>
+                </div>
+
+                <!-- ACCIONES (zona crítica UX) -->
+                <div class="mt-auto">
+                  <div class="d-grid gap-2">
+                    <button class="btn btn-dark ux-btn-main" @click="store.agregarProducto(store.informacion)">
+                      Añadir al carrito
+                    </button>
+
+                    <button class="btn btn-outline-dark ux-btn-alt">
+                      Comprar ahora
+                    </button>
+                  </div>
+                </div>
+
+              </div>
             </div>
 
-            <!-- Información -->
-            <div class="modal-body-custom">
-              <p><strong>Descripción:</strong> {{ store.informacion.descripcion }}</p>
-              <p><strong>Estado:</strong> {{ store.informacion.estado }}</p>
-              <p><strong>Stock disponible:</strong> {{ store.informacion.stock }}</p>
-              <p><strong>Precio referencial:</strong>
-                {{ store.informacion.precio_referencial ? store.informacion.precio_referencial : 'No disponible' }}
-              </p>
-              <p><strong>Marca:</strong> {{ store.informacion.marca ? store.informacion.marca : 'No especificada' }}</p>
-              <p><strong>Modelo:</strong> {{ store.informacion.modelo ? store.informacion.modelo : 'No especificado' }}
-              </p>
-              <p><strong>Tipo de conector:</strong> {{ store.informacion.tipo_conector ? store.informacion.tipo_conector
-                : 'No especificado' }}</p>
+            <!-- CARACTERÍSTICAS -->
+            <div class="ux-extra border-top p-4 px-8">
+              <h6 class="fw-semibold mb-3">Características</h6>
+
+              <ul class="ux-features-list">
+                <li><strong>Marca:</strong> {{ store.informacion.marca || '—' }}</li>
+                <li><strong>Modelo:</strong> {{ store.informacion.modelo || '—' }}</li>
+                <li><strong>Conector:</strong> {{ store.informacion.tipo_conector || '—' }}</li>
+                <li><strong>Compatibilidad:</strong> {{ store.informacion.compatibilidad || '—' }}</li>
+              </ul>
             </div>
 
-            <!-- Footer fijo -->
-            <div class="modal-footer-custom">
-              <button class="btn-primary" @click="store.agregarProducto(store.informacion)">Agregar al carrito</button>
-            </div>
           </div>
         </div>
       </Teleport>
@@ -215,6 +226,121 @@ function cerrarModal() {
 </template>
 
 <style>
+.contenedorTarjetas {
+  display: grid;
+}
+
+.contenedor3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.contenedor4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.ux-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 1050;
+}
+
+/* Contenedor modal */
+.ux-modal {
+  background: #fff;
+  width: 95%;
+  max-width: 90vw;
+  max-height: 90vh;
+  border-radius: 16px;
+  overflow: auto;
+  animation: scaleIn 0.25s ease;
+}
+
+/* Header */
+.ux-header {
+  background: #fff;
+}
+
+.ux-body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Botón cerrar */
+.ux-close-btn {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Imagen */
+.ux-img-wrapper {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.ux-main-img {
+  max-height: 320px;
+  object-fit: contain;
+}
+
+/* Precio */
+.ux-price {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111;
+}
+
+/* Descripción */
+.ux-description {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* Lista atributos */
+.ux-attributes div {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+/* Botones */
+.ux-btn-main {
+  padding: 12px;
+  font-weight: 600;
+}
+
+.ux-btn-alt {
+  padding: 10px;
+}
+
+/* Características */
+.ux-features-list {
+  columns: 2;
+  padding-left: 18px;
+}
+
+.ux-features-list li {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+/* Animación */
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .fondo {
   position: fixed;
   top: 0;
@@ -222,7 +348,7 @@ function cerrarModal() {
   width: 100vw;
   height: 100vh;
   background-color: rgba(0, 0, 0, 0.6);
-  z-index: 105099999999;
+  z-index: 999999;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -230,31 +356,79 @@ function cerrarModal() {
 }
 
 .modal-custom {
-  background-color: #fff;
-  border-radius: 16px;
-  width: 90%;
-  max-width: 600px;
-  max-height: 85vh;
+  background: #fff;
+  width: 80vw;
+  max-height: 80%;
+  border-radius: 10px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  position: relative;
 }
 
 .header-modal-custom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px 20px;
-  border-bottom: 1px solid #eee;
+  padding: 1rem;
+  border-bottom: 1px solid #ddd;
 }
 
-.header-modal-custom h3 {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #222;
+.modal-content {
+  display: flex;
+  padding: 1rem;
+}
+
+.modal-image {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.modal-info {
+  flex: 1;
+  padding: 0 1rem;
+}
+
+.precio {
+  font-size: 1.2rem;
+  color: #e63946;
+  font-weight: bold;
+}
+
+.acciones {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-primary {
+  background: #007bff;
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #f0f0f0;
+  color: #333;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal-extra {
+  padding: 1rem;
+  border-top: 1px solid #ddd;
 }
 
 .close-button {
@@ -268,62 +442,5 @@ function cerrarModal() {
 
 .close-button:hover {
   color: #ff4d4d;
-}
-
-.header-modal-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px;
-  background: #fafafa;
-}
-
-.header-modal-body img {
-  max-width: 100%;
-  max-height: 40vh;
-  object-fit: contain;
-  border-radius: 8px;
-}
-
-.modal-body-custom {
-  flex: 1;
-  padding: 16px 20px;
-  overflow-y: auto;
-}
-
-.modal-body-custom p {
-  margin: 10px 0;
-  font-size: 0.95rem;
-  color: #444;
-}
-
-.modal-body-custom strong {
-  color: #111;
-}
-
-.modal-footer-custom {
-  position: sticky;
-  bottom: 0;
-  background: #fff;
-  padding: 12px 20px;
-  border-top: 1px solid #eee;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #007bff, #0056b3);
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: transform 0.2s ease, background 0.3s ease;
-}
-
-.btn-primary:hover {
-  transform: scale(1.05);
-  background: linear-gradient(135deg, #0056b3, #00408f);
 }
 </style>

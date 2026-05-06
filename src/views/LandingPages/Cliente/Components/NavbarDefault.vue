@@ -108,13 +108,14 @@ function showNav () {
         ? 'container'
         : 'container-fluid px-0'
       ">
-      <RouterLink class="navbar-brand d-none d-md-block" :class="[
+
+      <RouterLink class="navbar-brand d-none d-md-flex align-items-center gap-2" :class="[
         (props.transparent && textDark) || !props.transparent
           ? 'text-dark font-weight-bolder ms-sm-3'
           : 'font-weight-bolder text-lg ms-sm-3'
       ]" :to="{ name: 'presentation' }" rel="tooltip" title="Nombre Compañia" data-placement="bottom">
-        <img src="src/assets/img/products/jyc_logo.png" width="20" alt="Logo J&C Medical"/>
-        <span class="color-default">J&C MEDICAL</span>
+        <img src="src/assets/img/products/jyc_logo.png" width="30" alt="Logo J&C Medical"/>
+        <span class="color-default ml-2">J&C MEDICAL</span>
       </RouterLink>
 
       <button class="navbar-toggler shadow-none ms-2 bg-white" type="button" data-bs-toggle="collapse" @click="showNav"
@@ -129,30 +130,35 @@ function showNav () {
       <div class="collapse navbar-collapse w-100 pt-3 pb-2 py-lg-0" id="navigation">
         <ul class="navbar-nav navbar-nav-hover ms-auto">
           <li class="nav-item dropdown dropdown-hover mx-2">
-            <a href="#Inicio" class="nav-link ps-2 d-flex cursor-pointer align-items-center text-dark"
+            <a href="/#Inicio" class="nav-link ps-2 d-flex cursor-pointer align-items-center text-dark"
               :class="getTextColor()">
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">dashboard</i>
               Inicio
             </a>
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">
-            <a href="#SobreNosotros" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
+            <a href="/#SobreNosotros" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">contacts</i>
               Sobre Nosotros
             </a>
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">
-            <a href="#Productos" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
+            <a href="/Catalogo" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">view_day</i>
               Productos
             </a>
           </li>
           <li class="nav-item dropdown dropdown-hover mx-2">
-            <a href="/inicio_sesion" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
-              <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">account_circle</i>
-              Iniciar Sesión
+            <a href="/#Contactanos" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
+              <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">attach_money</i>
+              Solicitar Cotizacion
             </a>
           </li>
+          <!-- <li class="nav-item dropdown dropdown-hover mx-2">
+            <a href="https://wa.me/573001234567" target="_blank" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
+              <img src="src/assets/img/whatsapp.png" width="30" height="20" alt="WhatsApp Icon" class="me-2">
+            </a>
+          </li> -->
         </ul>
       </div>
     </div>

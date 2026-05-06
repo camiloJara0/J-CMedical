@@ -8,13 +8,16 @@ export const useAppStore = defineStore("storeId", {
     showAlert: false,
     cargando: false,
     alert: {},
-    carrito: []
+    carrito: [],
+    cotizar: true,
   }),
 
   actions: {
     agregarProducto(producto) {
+      this.carrito = localStorage.getItem('carrito') ? JSON.parse(localStorage.getItem('carrito')) : []
       this.carrito.push(producto)
       this.showModal = false
+      localStorage.setItem('carrito', JSON.stringify(this.carrito))
       this.mostrarAlerta('Nuevo producto añadido', 'success')
     },
 
@@ -22,6 +25,7 @@ export const useAppStore = defineStore("storeId", {
       this.carrito = this.carrito.filter(p => {
         return p.id !== producto.id
       })
+      localStorage.setItem('carrito', JSON.stringify(this.carrito))
     },
 
     mostrarAlerta(texto, color) {
