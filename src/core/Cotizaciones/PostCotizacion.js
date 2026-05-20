@@ -35,6 +35,7 @@ export async function enviarCotizacion(cotizacion) {
       throw new Error(`Error en la petición: ${response.status}`);
     }
 
+    localStorage.removeItem('carrito')
     const data = await response.json();
     return data;
   } catch (error) {

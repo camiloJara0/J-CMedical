@@ -55,8 +55,7 @@ const productosCortados = computed(() => {
             <a href="/Catalogo" class="d-flex flex-column align-items-center catalogo">
               <img :src="producto.imagen" :alt="producto.title" class="d-block w-75 rounded shadow" loading="lazy" @error="e => e.target.src = 'src/assets/img/errorImagen.jpg'" />
               <div class="mt-3">
-                <h5>{{ producto.title }}</h5>
-                <p class="text-muted">{{ producto.descripcion }}</p>
+                <a href="/Catalogo" class="text-dark" style="font-size: 1.5rem; user-select: all;">{{ producto.descripcion }}</a>
               </div>
             </a>
           </div>
