@@ -44,12 +44,12 @@ const store = useAppStore()
         {{ description }}
       </p>
       <div class="d-flex justify-content-center gap-2 mt-auto">
-        <button class="btn btn-sm btn-animated text-truncate" :class="`btn-outline-${action.color} bg-custom-default`"
+        <button class="btn btn-sm btn-animated text-truncate" :class="`btn-outline-${action.color} `"
           @click.stop="action.action(producto)">
           Más Información
         </button>
         <button class="btn btn-sm btn-animated d-flex justify-content-center align-items-center gap-2 text-truncate"
-          :class="`btn-outline-success bg-custom-default`" @click.stop="store.agregarProducto(producto)">
+          :class="`btn-outline-success `" @click.stop="store.agregarProducto(producto)">
           Añadir <i class="material-icons color-success fs-5">shopping_cart</i>
         </button>
       </div>
