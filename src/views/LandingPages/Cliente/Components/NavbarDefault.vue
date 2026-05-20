@@ -114,7 +114,7 @@ function showNav () {
           ? 'text-dark font-weight-bolder ms-sm-3'
           : 'font-weight-bolder text-lg ms-sm-3'
       ]" :to="{ name: 'presentation' }" rel="tooltip" title="Nombre Compañia" data-placement="bottom">
-        <img src="src/assets/img/products/jyc_logo.png" width="30" alt="Logo J&C Medical"/>
+        <img src=".src/assets/img/products/jyc_logo.png" width="30" alt="Logo J&C Medical"/>
         <span class="color-default ml-2">J&C MEDICAL</span>
       </RouterLink>
 
