@@ -50,7 +50,7 @@ const store = useAppStore()
         </button>
         <button class="btn btn-sm btn-animated d-flex justify-content-center align-items-center gap-2 text-truncate"
           :class="`btn-outline-success `" @click.stop="store.agregarProducto(producto)">
-          Añadir <i class="material-icons color-success fs-5">shopping_cart</i>
+          Añadir <i class="material-icons color-success fs-5">attach_money</i>
         </button>
       </div>
     </div>

@@ -47,7 +47,7 @@ defineProps({
   <header class="header-2 position-relative">
     <div class="section-actions">
       <div class="buttons-custom gap-sm-2">
-        <a href="#Contactanos" class="btn btn-primary" style="background-color: #dd9d5c;">Contactanos</a>
+        <a href="/#Contactanos" class="btn btn-primary" style="background-color: #dd9d5c;">Contactanos</a>
         <a href="#SobreNosotros" class="btn btn-dark d-md-block d-none">Sobre Nosotros</a>
       </div>
     </div>

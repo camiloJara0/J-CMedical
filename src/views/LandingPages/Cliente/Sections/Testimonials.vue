@@ -52,7 +52,7 @@ function showInfo() {
               <p class="text-sm text-white opacity-8">
                 Productos en nuestro catalogo.
               </p>
-              <a href="#Productos" class="text-white icon-move-right text-sm">Ver Productos
+              <a href="/Catalogo" class="text-white icon-move-right text-sm hover:color-default">Ver Productos
                 <i class="fas fa-arrow-right text-xs ms-1"></i>
               </a>
             </div>

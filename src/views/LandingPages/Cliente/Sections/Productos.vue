@@ -191,11 +191,7 @@ function cambiarColumnas() {
                 <div class="mt-auto">
                   <div class="d-grid gap-2">
                     <button class="btn btn-dark ux-btn-main" @click="store.agregarProducto(store.informacion)">
-                      Añadir al carrito
-                    </button>
-
-                    <button class="btn btn-outline-dark ux-btn-alt">
-                      Comprar ahora
+                      Añadir a cotizacion
                     </button>
                   </div>
                 </div>

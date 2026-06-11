@@ -132,7 +132,7 @@ const productosPorCategoria = (categoriaId) => {
   <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1050;">
     <a href="/#Contactanos"
       class="btn btn-lg btn-dark rounded-pill shadow-lg d-flex align-items-center gap-2 animate__animated animate__pulse">
-      <span class="material-icons">shopping_cart</span>
+      <span class="material-icons">attach_money</span>
       Solicitar Cotización
     </a>
   </div>

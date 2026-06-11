@@ -173,7 +173,7 @@ function validarCorreo(correo) {
 
               <!-- HEADER DINÁMICO -->
               <div class="card-header bg-custom-default shadow-dark text-white">
-                <h3 class="mb-0 text-white">
+                <h3 class="mb-0 text-white text-center">
                   {{ store.cotizar ? 'Solicitar Cotización' : 'Contactar' }}
                 </h3>
               </div>

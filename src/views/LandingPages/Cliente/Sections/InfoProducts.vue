@@ -53,7 +53,7 @@ const productosCortados = computed(() => {
             :class="{ active: index === 0 }">
 
             <a href="/Catalogo" class="d-flex flex-column align-items-center catalogo">
-              <img :src="producto.imagen" :alt="producto.title" class="d-block w-75 rounded shadow" loading="lazy" @error="e => e.target.src = 'src/assets/img/errorImagen.jpg'" />
+              <img :src="producto.imagen" width="1200" height="400" :alt="producto.title" class="d-block w-75 rounded shadow" loading="lazy" @error="e => e.target.src = 'src/assets/img/errorImagen.jpg'" />
               <div class="mt-3">
                 <a href="/Catalogo" class="text-dark" style="font-size: 1.5rem; user-select: all;">{{ producto.descripcion }}</a>
               </div>
@@ -79,9 +79,13 @@ const productosCortados = computed(() => {
 </template>
 
 <style>
+#catalogoCarousel {
+  height: 80vh;
+}
+
 .catalogo img {
   width: auto;
-  height: 60vh;
+  height: 55vh;
   object-fit: cover;
 }
 

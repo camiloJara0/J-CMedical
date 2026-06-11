@@ -56,7 +56,7 @@ defineProps({
           },
           {
             name: "Productos",
-            href: "#Productos",
+            href: "/Catalogo",
             target: ''
           },
           {
@@ -71,7 +71,6 @@ defineProps({
         items: [
           {
             name: "Colombia, Valle del Cauca",
-            href: "#Contactanos",
             target: '',
           },
         ],
