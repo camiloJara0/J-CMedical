@@ -8,6 +8,7 @@ export async function enviarCotizacion(cotizacion) {
     formData.append('descripcion', cotizacion.mensaje);
     formData.append('NIT', cotizacion.nit);
     formData.append('telefono', cotizacion.telefono);
+    formData.append('turnstile_token', cotizacion.turnstile_token)
 
     // Imagen de referencia (archivo)
     if (cotizacion.file) {
