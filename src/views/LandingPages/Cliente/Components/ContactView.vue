@@ -18,12 +18,18 @@ onMounted(() => {
 
 const store = useAppStore();
 const { mostrarAlerta } = useAppStore()
+const siteKey = '0x4AAAAAAEneIlOprDD2sZol'
+const token = ref('')
 
 onMounted(() => {
   const carritoGuardado = localStorage.getItem('carrito');
   if (carritoGuardado) {
     store.carrito = JSON.parse(carritoGuardado);
   }
+
+  window.turnstileCallback = (tokenn) => {
+    token.value = tokenn;
+  };
 })
 
 const formData = ref({
@@ -83,7 +89,7 @@ async function enviarMensaje(event) {
   // Si todo está bien, enviar el mensaje
   try {
 
-    const respuesta = await enviarCotizacion(formData.value)
+    const respuesta = await enviarCotizacion({ ...formData.value, turnstile_token: token.value })
 
     mostrarAlerta('Mensaje enviado correctamente', 'success');
 
@@ -164,7 +170,7 @@ function validarCorreo(correo) {
               </div>
             </div>
           </div>
-          
+
 
           <!-- PANEL DERECHO -->
           <div class="col-xl-5 col-lg-6 col-md-10 col-12 mx-auto">
@@ -213,10 +219,13 @@ function validarCorreo(correo) {
                         </div>
                       </div>
                       <div class="form-group mb-0 mt-md-0 mt-4">
-                        <MaterialTextArea id="message" class="input-group-static mb-4" :rows="4"
+                        <MaterialTextArea id="message" class="input-group-static mb-3" :rows="2"
                           placeholder="Necesito conector..." v-model="formData.mensaje" :modelValue="formData.mensaje">
                           Descripcion *
                         </MaterialTextArea>
+                      </div>
+                      <div class="col-md-12 text-center">
+                        <div class="cf-turnstile rounded" :data-sitekey="siteKey" data-callback="turnstileCallback"></div>
                       </div>
                       <div class="row">
                         <div class="col-md-12 text-center">
@@ -341,7 +350,7 @@ function validarCorreo(correo) {
 }
 
 @media (max-width: 768px) {
-  .ux-side-panel{
+  .ux-side-panel {
     min-height: 40vh;
     overflow: auto;
   }
