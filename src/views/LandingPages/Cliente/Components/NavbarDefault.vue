@@ -1,11 +1,13 @@
 <script setup>
 import { RouterLink } from "vue-router";
-import { ref, watch, onMounted, onBeforeMount } from "vue";
+import { ref, watch, onMounted, onBeforeMount, defineEmits } from "vue";
 import { useWindowsWidth } from "../../../../assets/js/useWindowsWidth";
 
 // images
 import ArrDark from "@/assets/img/down-arrow-dark.svg";
 import DownArrWhite from "@/assets/img/down-arrow-white.svg";
+
+const emit = defineEmits(['abrirSolicitudCita']);
 
 const props = defineProps({
   action: {
@@ -152,6 +154,12 @@ function showNav () {
             <a href="/#Contactanos" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
               <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">attach_money</i>
               Solicitar Cotizacion
+            </a>
+          </li>
+          <li class="nav-item dropdown dropdown-hover mx-2">
+            <a @click.prevent="emit('abrirSolicitudCita')" role="button" class="nav-link ps-2 d-flex cursor-pointer align-items-center" :class="getTextColor()">
+              <i class="material-icons opacity-6 me-2 text-md" :class="getTextColor()">build</i>
+              Solicitar Cita
             </a>
           </li>
           <!-- <li class="nav-item dropdown dropdown-hover mx-2">

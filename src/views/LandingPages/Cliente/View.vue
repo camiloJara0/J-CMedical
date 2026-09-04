@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 //example components
 import NavbarDefault from "./Components/NavbarDefault.vue";
@@ -15,6 +15,7 @@ import Productos from "./Sections/Productos.vue";
 import InfoProducts from "./Sections/InfoProducts.vue";
 import { useAppStore } from "../../../stores";
 import ContactView from "./Components/ContactView.vue";
+import SolicitudCitaModal from "./Components/SolicitudCitaModal.vue";
 
 //hooks
 const body = document.getElementsByTagName("body")[0];
@@ -34,6 +35,12 @@ onUnmounted(() => {
 });
 
 const store = useAppStore()
+
+const showModalCita = ref(false)
+
+function abrirSolicitudCita() {
+  showModalCita.value = true
+}
 </script>
 <template>
   <div class="container-custom"></div>
@@ -47,7 +54,7 @@ const store = useAppStore()
   <div class="container position-sticky z-index-sticky top-0">
     <div class="row">
       <div class="col-12">
-        <NavbarDefault darkText :sticky="true" />
+        <NavbarDefault darkText :sticky="true" @abrirSolicitudCita="abrirSolicitudCita" />
       </div>
     </div>
   </div>
@@ -68,6 +75,9 @@ const store = useAppStore()
       <p class="font-weight-bold m-0">{{ store.alert.texto }}</p>
     </MaterialAlert>
   </div>
+
+  <!-- Modal Solicitud Cita -->
+  <SolicitudCitaModal :show="showModalCita" @cerrar="showModalCita = false" />
 
 </template>
 
