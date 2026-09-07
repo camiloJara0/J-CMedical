@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, nextTick } from "vue";
 import image from "/mano-en-guante-medico-apuntando-la-tecnologia-medica-de-pantalla-virtual.jpg"
 
 //material components
@@ -20,17 +20,46 @@ const store = useAppStore();
 const { mostrarAlerta } = useAppStore()
 const siteKey = '0x4AAAAAAEneIlOprDD2sZol'
 const token = ref('')
+const verificando = ref(false)
+const verificado = ref(false)
+const turnstileContainerId = 'turnstile-cotizacion-container'
 
 onMounted(() => {
   const carritoGuardado = localStorage.getItem('carrito');
   if (carritoGuardado) {
     store.carrito = JSON.parse(carritoGuardado);
   }
-
-  window.turnstileCallback = (tokenn) => {
-    token.value = tokenn;
-  };
 })
+
+function iniciarVerificacion() {
+  if (verificado.value) return
+  verificando.value = true
+
+  window.turnstileCallback = (tok) => {
+    token.value = tok
+    verificando.value = false
+    verificado.value = true
+  }
+
+  nextTick(() => {
+    const container = document.getElementById(turnstileContainerId)
+    if (!container) return
+    container.innerHTML = ''
+    if (window.turnstile) {
+      window.turnstile.render(container, {
+        sitekey: siteKey,
+        callback: window.turnstileCallback,
+        'error-callback': () => {
+          verificando.value = false
+          mostrarAlerta('Error en la verificación. Intenta de nuevo.', 'warning')
+        },
+      })
+    } else {
+      verificando.value = false
+      mostrarAlerta('No se pudo cargar la verificación de seguridad.', 'warning')
+    }
+  })
+}
 
 const formData = ref({
   nombre: '',
@@ -86,6 +115,12 @@ async function enviarMensaje(event) {
     return
   }
 
+  if (!verificado.value || !token.value) {
+    mostrarAlerta('Completa la verificación de seguridad.', 'warning');
+    store.cargando = false
+    return
+  }
+
   // Si todo está bien, enviar el mensaje
   try {
 
@@ -103,6 +138,8 @@ async function enviarMensaje(event) {
     }
 
     store.carrito = []
+    token.value = ''
+    verificado.value = false
   } catch (error) {
     console.error('Error al enviar:', error);
     mostrarAlerta('Hubo un problema al enviar el mensaje', 'danger');
@@ -225,7 +262,18 @@ function validarCorreo(correo) {
                         </MaterialTextArea>
                       </div>
                       <div class="col-md-12 text-center">
-                        <div class="cf-turnstile rounded" :data-sitekey="siteKey" data-callback="turnstileCallback"></div>
+                        <!-- Botón de verificación Turnstile -->
+                        <div v-if="!verificado && !verificando" class="cv-turnstile-btn" @click="iniciarVerificacion">
+                          <i class="material-icons">shield</i>
+                          <span>Verificar que no soy un robot</span>
+                        </div>
+                        <!-- Widget Turnstile se renderiza aquí -->
+                        <div :id="turnstileContainerId" class="cv-turnstile-widget"></div>
+                        <!-- Estado verificado -->
+                        <div v-if="verificado" class="cv-turnstile-success">
+                          <i class="material-icons">check_circle</i>
+                          <span>Verificación completada</span>
+                        </div>
                       </div>
                       <div class="row">
                         <div class="col-md-12 text-center">
@@ -354,5 +402,62 @@ function validarCorreo(correo) {
     min-height: 40vh;
     overflow: auto;
   }
+}
+
+/* Turnstile Button */
+.cv-turnstile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 16px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(34, 98, 163, 0.3);
+  border: 2px solid transparent;
+}
+.cv-turnstile-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 98, 163, 0.45);
+  color: #2262a3;
+}
+.cv-turnstile-btn:active {
+  transform: translateY(0);
+}
+.cv-turnstile-btn .material-icons {
+  font-size: 24px;
+}
+
+.cv-turnstile-widget {
+  display: inline-block;
+  min-height: 65px;
+}
+
+.cv-turnstile-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  animation: bounceIn 0.4s ease;
+  border: 2px solid #28a745;
+}
+.cv-turnstile-success .material-icons {
+  font-size: 24px;
+  color: #28a745;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
 }
 </style>

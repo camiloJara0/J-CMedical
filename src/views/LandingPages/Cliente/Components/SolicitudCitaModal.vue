@@ -18,6 +18,9 @@ const { mostrarAlerta } = useAppStore();
 
 const siteKey = '0x4AAAAAAEneIlOprDD2sZol'
 const token = ref('')
+const verificando = ref(false)
+const verificado = ref(false)
+const turnstileContainerId = 'turnstile-cita-container'
 
 const paso = ref(1);
 const cargandoValidacion = ref(false);
@@ -44,25 +47,41 @@ const formData = ref({
 let timeoutNIT = null;
 let timeoutSerial = null;
 
-onMounted(() => {
-  window.turnstileCallbackCita = (tokenn) => {
-    token.value = tokenn;
-  };
-})
+function iniciarVerificacion() {
+  if (verificado.value) return
+  verificando.value = true
 
-watch(() => props.show, async (nuevoValor) => {
-  if (nuevoValor) {
-    await nextTick()
-    // Re-renderizar Turnstile cuando el modal se abre
+  window.turnstileCallbackCita = (tok) => {
+    token.value = tok
+    verificando.value = false
+    verificado.value = true
+  }
+
+  nextTick(() => {
+    const container = document.getElementById(turnstileContainerId)
+    if (!container) return
+    container.innerHTML = ''
     if (window.turnstile) {
-      const container = document.querySelector('.sc-modal-overlay .cf-turnstile')
-      if (container) {
-        window.turnstile.render(container, {
-          sitekey: siteKey,
-          callback: window.turnstileCallbackCita,
-        })
-      }
+      window.turnstile.render(container, {
+        sitekey: siteKey,
+        callback: window.turnstileCallbackCita,
+        'error-callback': () => {
+          verificando.value = false
+          mostrarAlerta('Error en la verificación. Intenta de nuevo.', 'warning')
+        },
+      })
+    } else {
+      verificando.value = false
+      mostrarAlerta('No se pudo cargar la verificación de seguridad.', 'warning')
     }
+  })
+}
+
+watch(() => props.show, (nuevoValor) => {
+  if (!nuevoValor) {
+    token.value = ''
+    verificado.value = false
+    verificando.value = false
   }
 })
 
@@ -146,7 +165,7 @@ async function enviarSolicitud() {
     return;
   }
 
-  if (!token.value) {
+  if (!verificado.value || !token.value) {
     mostrarAlerta('Completa la verificación de seguridad.', 'warning');
     return;
   }
@@ -173,6 +192,9 @@ function cerrarModal() {
     enviado.value = false;
     clienteRegistrado.value = false;
     equipoRegistrado.value = false;
+    token.value = '';
+    verificado.value = false;
+    verificando.value = false;
   }
   emit('cerrar');
 }
@@ -396,7 +418,15 @@ function cerrarModal() {
 
                   <div class="row mt-3">
                     <div class="col-12 text-center">
-                      <div class="cf-turnstile rounded" :data-sitekey="siteKey" data-callback="turnstileCallbackCita"></div>
+                      <!-- Botón de verificación Turnstile -->
+                      <div v-if="!verificado && !verificando" class="sc-turnstile-btn" @click="iniciarVerificacion">
+                        <i class="material-icons">shield</i>
+                        <span>Verificar que no soy un robot</span>
+                      </div>
+                      <!-- Widget Turnstile se renderiza aquí -->
+                      <div :id="turnstileContainerId" class="sc-turnstile-widget"></div>
+                      <!-- Estado verificado -->
+
                     </div>
                   </div>
                 </div>
@@ -814,5 +844,54 @@ function cerrarModal() {
   .sc-modal-body {
     padding: 8px 18px 12px;
   }
+}
+
+/* Turnstile Button */
+.sc-turnstile-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(34, 98, 163, 0.3);
+  border: 2px solid transparent;
+}
+.sc-turnstile-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(34, 98, 163, 0.45);
+  color: #2262a3;
+}
+.sc-turnstile-btn:active {
+  transform: translateY(0);
+}
+.sc-turnstile-btn .material-icons {
+  font-size: 22px;
+}
+
+.sc-turnstile-widget {
+  display: inline-block;
+  min-height: 65px;
+}
+
+.sc-turnstile-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+  color: #155724;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  animation: bounceIn 0.4s ease;
+  border: 2px solid #28a745;
+}
+.sc-turnstile-success .material-icons {
+  font-size: 22px;
+  color: #28a745;
 }
 </style>
