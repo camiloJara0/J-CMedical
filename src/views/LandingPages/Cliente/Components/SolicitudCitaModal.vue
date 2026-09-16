@@ -531,6 +531,7 @@ function cerrarModal() {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
+  color: #fff;
 }
 
 .sc-header-subtitle {
