@@ -124,7 +124,7 @@ async function enviarMensaje(event) {
   // Si todo está bien, enviar el mensaje
   try {
 
-    // const respuesta = await enviarCotizacion({ ...formData.value, turnstile_token: token.value })
+    const respuesta = await enviarCotizacion({ ...formData.value, turnstile_token: token.value })
 
     mostrarAlerta('Mensaje enviado correctamente', 'success');
 
