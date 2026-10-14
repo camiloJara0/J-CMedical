@@ -76,7 +76,7 @@ async function enviarMensaje(event) {
   formData.value.productos = store.carrito
   const { nombre, correo, nit, mensaje, file, productos } = formData.value;
 
-  const conector = formData.value.productos.filter(p => p.tipo_conector !== null)
+  const conector = formData.value.productos.filter(p => p.tipo_conector !== null && p.tipo_conector !== 'universal')
 
   // Validaciones
   if (!nombre || !correo || !nit || (conector.length && !mensaje)) {
@@ -124,7 +124,7 @@ async function enviarMensaje(event) {
   // Si todo está bien, enviar el mensaje
   try {
 
-    const respuesta = await enviarCotizacion({ ...formData.value, turnstile_token: token.value })
+    // const respuesta = await enviarCotizacion({ ...formData.value, turnstile_token: token.value })
 
     mostrarAlerta('Mensaje enviado correctamente', 'success');
 
