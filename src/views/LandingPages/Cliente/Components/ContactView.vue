@@ -10,7 +10,6 @@ import MaterialButton from "../../../../components/MaterialButton.vue";
 // material-input
 import setMaterialInput from "@/assets/js/material-input";
 import { useAppStore } from "../../../../stores";
-import { enviarCotizacion } from "../../../../core/Cotizaciones/PostCotizacion";
 
 onMounted(() => {
   setMaterialInput();
@@ -77,10 +76,11 @@ async function enviarMensaje(event) {
   formData.value.productos = store.carrito
   const { nombre, correo, nit, mensaje, file, productos } = formData.value;
 
+  const conector = formData.value.productos.filter(p => p.tipo_conector !== null)
 
   // Validaciones
-  if (!nombre || !correo || !nit || !mensaje) {
-    mostrarAlerta('Por favor completa todos los campos.', 'warning');
+  if (!nombre || !correo || !nit || (conector.length && !mensaje)) {
+    mostrarAlerta('Por favor completa todos los campos.' + (conector.length && !mensaje ? ' La descripción es obligatoria.' : ''), 'warning');
     store.cargando = false
     return;
   }
@@ -97,7 +97,7 @@ async function enviarMensaje(event) {
     return;
   }
 
-  if (mensaje.length < 10) {
+  if (mensaje.length && mensaje.length < 10) {
     mostrarAlerta('El mensaje debe tener al menos 10 caracteres.', 'warning');
     store.cargando = false
     return;
@@ -137,7 +137,7 @@ async function enviarMensaje(event) {
       mensaje: '',
     }
 
-    store.carrito = []
+    store.vaciarCarrito()
     token.value = ''
     verificado.value = false
   } catch (error) {
@@ -258,7 +258,7 @@ function validarCorreo(correo) {
                       <div class="form-group mb-0 mt-md-0 mt-4">
                         <MaterialTextArea id="message" class="input-group-static mb-3" :rows="2"
                           placeholder="Necesito conector..." v-model="formData.mensaje" :modelValue="formData.mensaje">
-                          Descripcion *
+                          Descripcion
                         </MaterialTextArea>
                       </div>
                       <div class="col-md-12 text-center">

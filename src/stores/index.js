@@ -28,6 +28,11 @@ export const useAppStore = defineStore("storeId", {
       localStorage.setItem('carrito', JSON.stringify(this.carrito))
     },
 
+    vaciarCarrito() {
+      this.carrito = []
+      localStorage.removeItem('carrito')
+    },
+
     mostrarAlerta(texto, color) {
       this.alert.texto = texto;
       this.alert.color = color;
